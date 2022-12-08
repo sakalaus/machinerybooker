@@ -14,3 +14,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "machinery booker"
 include ':app'
+include ':core:ui'
+include ':core:data'
+include ':core:domain'
+include ':core:utils'
+include ':feature:order'
+include ':feature:orderlist'
