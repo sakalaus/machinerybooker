@@ -115,6 +115,12 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_kotlin_version"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_kotlin_codegen_version"
 
+    // Ktor
+    implementation "io.ktor:ktor-client-core:$ktor_version"
+    implementation "io.ktor:ktor-client-cio:$ktor_version"
+    implementation "io.ktor:ktor-client-websockets:$ktor_version"
+    implementation "io.ktor:ktor-client-logging:$ktor_version"
+
     // Window metrics
     implementation "androidx.window:window:$window_version"
 
