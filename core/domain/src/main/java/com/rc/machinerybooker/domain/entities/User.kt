@@ -4,11 +4,11 @@ data class User(
     val id: Long,
     val externalId: String,
     val name: String,
-    val department: Department,
-    val role: UserRole
+    val departmentId: Long,
+    val role: Role
 )
 
-enum class UserRole{
+enum class Role{
     Client,
     Provider,
     Superuser

@@ -6,7 +6,7 @@ data class MachineryOrder(
     val description: String,
     val clientDepartmentId: Long,
     val providerDepartmentId: Long,
-    val createdBy: Long,
+    val createdByUserId: Long,
     val status: OrderStatus,
     val vehicleId: Long,
     val projectId: Long,
