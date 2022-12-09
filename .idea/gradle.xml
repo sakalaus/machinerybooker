@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -15,9 +16,8 @@
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/core/utils" />
-            <option value="$PROJECT_DIR$/feature" />
-            <option value="$PROJECT_DIR$/feature/order" />
-            <option value="$PROJECT_DIR$/feature/orderlist" />
+            <option value="$PROJECT_DIR$/feature-machinery-order-list" />
+            <option value="$PROJECT_DIR$/feature-settings" />
           </set>
         </option>
       </GradleProjectSettings>

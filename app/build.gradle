@@ -59,8 +59,8 @@ dependencies {
     implementation project(path: ':core:data')
     implementation project(path: ':core:domain')
     implementation project(path: ':core:utils')
-    implementation project(path: ':feature:order')
-    implementation project(path: ':feature:orderlist')
+    implementation project(path: ':feature-machinery-order-list')
+    implementation project(path: ':feature-settings')
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_coroutines_android_version"
