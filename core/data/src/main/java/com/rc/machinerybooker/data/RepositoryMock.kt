@@ -2,10 +2,13 @@ package com.rc.machinerybooker.data
 
 import com.rc.machinerybooker.domain.entities.*
 import com.rc.machinerybooker.domain.repository.Repository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
-class RepositoryMock: Repository {
+class RepositoryMock @Inject constructor(): Repository {
 
-    override fun getMachineryOrderList(): List<MachineryOrder>  = mockMachineryOrders
+    override fun observeMachineryOrderList(): Flow<List<MachineryOrder>> = flowOf(mockMachineryOrders)
 
     override fun getMachineryOrder(orderId: Long): MachineryOrder? = mockMachineryOrders.firstOrNull {
         it.id == orderId

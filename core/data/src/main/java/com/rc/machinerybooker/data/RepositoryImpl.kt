@@ -2,9 +2,10 @@ package com.rc.machinerybooker.data
 
 import com.rc.machinerybooker.domain.entities.*
 import com.rc.machinerybooker.domain.repository.Repository
+import kotlinx.coroutines.flow.Flow
 
 class RepositoryImpl: Repository {
-    override fun getMachineryOrderList(): List<MachineryOrder> {
+    override fun observeMachineryOrderList(): Flow<List<MachineryOrder>> {
         TODO("Not yet implemented")
     }
 
