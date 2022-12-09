@@ -2,7 +2,7 @@ package com.rc.machinerybooker.feature.machineryorderlist.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rc.machinerybooker.domain.entities.MachineryOrderFilter
+import com.rc.machinerybooker.domain.entities.*
 import com.rc.machinerybooker.domain.usecases.UseCases
 import com.rc.machinerybooker.feature.machineryorderlist.screen.MachineryOrderEvent.MachineryOrderClicked
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,12 +24,12 @@ class MachineryOrderListViewModel @Inject constructor(
     }
 
     private fun initializeObservers() {
-        useCases.observeMachineryOrderList(machineryOrderFilter)
+        useCases.observeMachineryOrderExtendedDataList(machineryOrderFilter)
             .onStart {
                 _uiState.update { it.copy(isLoading = false) }
             }
-            .onEach { machineryOrders ->
-                _uiState.update { it.copy(machineryOrders = machineryOrders) }
+            .onEach { machineryOrdersMap ->
+                _uiState.update { it.copy(machineryOrdersMap = machineryOrdersMap) }
             }.launchIn(viewModelScope)
     }
 
@@ -44,3 +44,4 @@ class MachineryOrderListViewModel @Inject constructor(
     }
 
 }
+

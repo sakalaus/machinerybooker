@@ -39,7 +39,8 @@ fun MbAppScreen(
         topBar = {
             MbTopBar(
                 actionIcon = Icons.Default.MoreVert,
-                actionIconContentDescription = "Action icon"
+                actionIconContentDescription = "Action icon",
+                onActionClick = {}
             )
         },
         bottomBar = {
@@ -64,13 +65,24 @@ fun MbAppScreen(
 fun MbTopBar(
     modifier: Modifier = Modifier,
     actionIcon: ImageVector,
-    actionIconContentDescription: String
+    actionIconContentDescription: String,
+    onActionClick: () -> Unit,
+    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors()
 ){
-    TopAppBar(
+    CenterAlignedTopAppBar(
         modifier = modifier,
-        title = {},
+        title = {Text("Pregol machinery")},
         navigationIcon = {},
-        actions = {}
+        colors = colors,
+        actions = {
+            IconButton(onClick = onActionClick) {
+                Icon(
+                    imageVector = actionIcon,
+                    contentDescription = actionIconContentDescription,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        },
     )
 }
 

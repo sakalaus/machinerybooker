@@ -30,7 +30,7 @@ fun EmptyScreen(
             Icon(
                 modifier = Modifier.size(32.dp),
                 imageVector = imageVector,
-                tint = MaterialTheme.colorScheme.errorContainer,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 contentDescription = text
             )
         }
@@ -43,7 +43,7 @@ fun EmptyScreen(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = TextStyle(
-                    color = MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Normal
                 )
