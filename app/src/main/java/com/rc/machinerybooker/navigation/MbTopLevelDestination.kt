@@ -14,7 +14,7 @@ enum class MbTopLevelDestination(
     val iconTextId: Int,
     val titleTextId: Int
 ) {
-    MACHINERY_ORDER_LIST(
+    ORDER_LIST(
         selectedIcon = Icons.Filled.List,
         unselectedIcon = Icons.Outlined.List,
         iconTextId = appRes.string.list,

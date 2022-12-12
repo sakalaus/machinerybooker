@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/core/utils" />
+            <option value="$PROJECT_DIR$/feature-machinery-order" />
             <option value="$PROJECT_DIR$/feature-machinery-order-list" />
             <option value="$PROJECT_DIR$/feature-settings" />
           </set>

@@ -71,7 +71,7 @@ fun MbTopBar(
 ){
     CenterAlignedTopAppBar(
         modifier = modifier,
-        title = {Text("Pregol machinery")},
+        title = {Text("Преголь: Заявки")},
         navigationIcon = {},
         colors = colors,
         actions = {

@@ -1,6 +1,7 @@
 package com.rc.machinerybooker.feature.machineryorderlist.screen
 
 import android.graphics.fonts.FontStyle
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -112,7 +114,8 @@ fun MachineryOrderItem(
         ) {
             MachineryOrderItemRow(
                 text = "12.06.22 14:00-16.00 ${extendedData.vehicle?.description}",
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                background = MaterialTheme.colorScheme.primaryContainer
             )
             MachineryOrderItemRow(text = "${extendedData.project?.externalId} ${extendedData.project?.description}")
             MachineryOrderItemRowTwoColumns(
@@ -120,9 +123,10 @@ fun MachineryOrderItem(
                 textEnd = "${extendedData.user?.name}",
             )
             MachineryOrderItemRowTwoColumns(
-                textStart = machineryOrder.status.name,
+                textStart = stringResource(machineryOrder.status.resId),
                 textEnd = "${extendedData.clientDepartment?.description} -> ${extendedData.providerDepartment?.description}",
-                colorStart = if (machineryOrder.status == OrderStatus.Cancelled) MaterialTheme.colorScheme.error else Color.Blue)
+                colorStart = if (machineryOrder.status == OrderStatus.Cancelled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
@@ -130,6 +134,7 @@ fun MachineryOrderItem(
 @Composable
 fun MachineryOrderItemRow(
     text: String,
+    background: Color = Color.Transparent,
     fontWeight: FontWeight = FontWeight.Normal
 ) {
     Row(
@@ -142,6 +147,7 @@ fun MachineryOrderItemRow(
     ) {
         Text(modifier = Modifier
             .fillMaxWidth()
+            .background(background)
             .wrapContentHeight(),
             text = text,
             fontWeight = fontWeight,

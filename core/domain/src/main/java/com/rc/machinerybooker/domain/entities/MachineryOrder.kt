@@ -1,5 +1,8 @@
 package com.rc.machinerybooker.domain.entities
 
+import androidx.annotation.StringRes
+import com.rc.machinerybooker.domain.R as domainRes
+
 data class MachineryOrder(
     val id: Long,
     val externalId: String,
@@ -28,9 +31,10 @@ data class MachineryOrder(
         get() = actualFinishTimeStamp - actualStartTimeStamp
 }
 
-enum class OrderStatus{
-    Confirmed,
-    Cancelled,
-    InProgress,
-    Completed
+enum class OrderStatus(@StringRes val resId: Int)
+{
+    Confirmed(resId = domainRes.string.confirmed),
+    Cancelled(resId = domainRes.string.cancelled),
+    InProgress(resId = domainRes.string.in_progress),
+    Completed(resId = domainRes.string.completed),
 }
