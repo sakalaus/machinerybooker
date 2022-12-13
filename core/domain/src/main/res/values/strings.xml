@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="confirmed">Подтвержден</string>
+    <string name="draft">Черновик</string>
     <string name="cancelled">Отменен</string>
     <string name="in_progress">В работе</string>
     <string name="completed">Выполнен</string>

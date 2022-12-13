@@ -35,6 +35,7 @@ enum class OrderStatus(@StringRes val resId: Int)
 {
     Confirmed(resId = domainRes.string.confirmed),
     Cancelled(resId = domainRes.string.cancelled),
+    Draft(resId = domainRes.string.draft),
     InProgress(resId = domainRes.string.in_progress),
     Completed(resId = domainRes.string.completed),
 }
