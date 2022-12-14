@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/feature-machinery-order" />
             <option value="$PROJECT_DIR$/feature-machinery-order-list" />
             <option value="$PROJECT_DIR$/feature-settings" />
+            <option value="$PROJECT_DIR$/feature-welcome-screen" />
           </set>
         </option>
       </GradleProjectSettings>

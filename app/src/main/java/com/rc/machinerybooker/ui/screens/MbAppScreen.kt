@@ -9,11 +9,13 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -29,9 +31,11 @@ fun MbAppScreen(
     appState: MbAppState = rememberMbAppState(
         windowSizeClass = windowSizeClass
     ),
+    appViewModel: MbAppViewModel = hiltViewModel()
 ) {
     val systemUiController = rememberSystemUiController()
     val darkIcons = isSystemInDarkTheme()
+    val currentAppDataState = appViewModel.uiState.collectAsState().value
 
     SideEffect {
         systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = darkIcons)
@@ -39,37 +43,42 @@ fun MbAppScreen(
 
     Scaffold(
         topBar = {
-            MbTopBar(
-                actionIcon = Icons.Default.MoreVert,
-                actionIconContentDescription = "Action icon",
-                onActionClick = {}
-            )
+            if (currentAppDataState.shouldShowSystemBarsAndButtons) {
+                MbTopBar(
+                    actionIcon = Icons.Default.MoreVert,
+                    actionIconContentDescription = "Action icon",
+                    onActionClick = {}
+                )
+            }
         },
         bottomBar = {
-            MbBottomBar(
-                destinations = appState.topLevelDestinations,
-                onNavigateToDestination = appState::navigateToTopLevelDestination,
-                currentDestination = appState.currentDestination
-            )
+            if (currentAppDataState.shouldShowSystemBarsAndButtons) {
+                MbBottomBar(
+                    destinations = appState.topLevelDestinations,
+                    onNavigateToDestination = appState::navigateToTopLevelDestination,
+                    currentDestination = appState.currentDestination
+                )
+            }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { },
-                modifier = Modifier,
-                containerColor = Color(0xFF448AFF)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.add_new),
-                )
-//                Text(
-//                    text = stringResource(id = R.string.add_new),
-//                )
+            if (currentAppDataState.shouldShowSystemBarsAndButtons) {
+                ExtendedFloatingActionButton(
+                    onClick = { },
+                    modifier = Modifier,
+                    containerColor = Color(0xFF448AFF)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.add_new),
+                    )
+                }
             }
         }
     ) { innerPadding ->
         MbNavHost(
             navController = appState.navController,
+            onWelcomeScreenShow = { appViewModel.onEvent(MbAppScreenEvent.WelcomeScreenShown) },
+            welcomeScreenShown = currentAppDataState.welcomeScreenShown,
             onBackClick = appState::onBackClick,
             innerPadding = innerPadding
         )

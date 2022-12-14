@@ -10,21 +10,33 @@ import com.rc.feature.machinery_order.navigation.machineryOrderRoute
 import com.rc.machinerybooker.feature.machineryorderlist.navigation.machineryOrderListNavigationRoute
 import com.rc.machinerybooker.feature.machineryorderlist.navigation.machineryOrderListRoute
 import com.rc.machinerybooker.feature.settings.navigation.settingsRoute
+import com.rc.machinerybooker.feature.welcome_screen.navigation.welcomeScreenNavigationRoute
+import com.rc.machinerybooker.feature.welcome_screen.navigation.welcomeScreenRoute
 
 @Composable
 fun MbNavHost(
     navController: NavHostController,
+    onWelcomeScreenShow: () -> Unit,
+    welcomeScreenShown: Boolean,
     onBackClick: () -> Unit,
     innerPadding: PaddingValues,
-    startDestination: String = machineryOrderListNavigationRoute
+    startDestination: String = welcomeScreenNavigationRoute
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = Modifier.padding(paddingValues = innerPadding),
     ) {
+        welcomeScreenRoute(
+            onWelcomeScreenShow = onWelcomeScreenShow,
+            onNavigateToMachineryOrderList = { navController.onNavigateToMachineryOrderList() }
+        )
         machineryOrderRoute()
-        machineryOrderListRoute { navController.onNavigateToMachineryOrder() }
+        machineryOrderListRoute(
+            welcomeScreenShown = welcomeScreenShown,
+            onNavigateToMachineryOrder = { navController.onNavigateToMachineryOrder() },
+            onNavigateToWelcomeScreen = { navController.onNavigateToWelcomeScreen() }
+        )
         settingsRoute()
     }
 }
@@ -32,4 +44,15 @@ fun MbNavHost(
 fun NavHostController.onNavigateToMachineryOrder(
 ) {
     navigate(machineryOrderRoute)
+}
+
+
+fun NavHostController.onNavigateToMachineryOrderList(
+) {
+    navigate(machineryOrderListNavigationRoute)
+}
+
+fun NavHostController.onNavigateToWelcomeScreen(
+) {
+    navigate(welcomeScreenNavigationRoute)
 }

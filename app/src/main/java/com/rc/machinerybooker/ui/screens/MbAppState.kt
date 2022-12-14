@@ -26,7 +26,7 @@ fun rememberMbAppState(
     MbAppState(
         navController = navController,
         coroutineScope = coroutineScope,
-        windowSizeClass = windowSizeClass
+        windowSizeClass = windowSizeClass,
     )
 
 class MbAppState(

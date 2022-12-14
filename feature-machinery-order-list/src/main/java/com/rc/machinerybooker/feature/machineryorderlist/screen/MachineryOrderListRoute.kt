@@ -14,6 +14,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,20 +37,31 @@ import com.rc.machinerybooker.domain.usecases.extendedMachineryOrderMapType
 @Composable
 fun OrderListRoute(
     viewModel: MachineryOrderListViewModel = hiltViewModel(),
-    onNavigateToMachineryOrder: () -> Unit
+    welcomeScreenShown: Boolean,
+    onNavigateToMachineryOrder: () -> Unit,
+    onNavigateToWelcomeScreen: () -> Unit
 ) {
     val currentUiState = viewModel.uiState.collectAsState().value
     OrderListScreen(
         uiState = currentUiState,
-        onNavigateToMachineryOrder = onNavigateToMachineryOrder
+        welcomeScreenShown = welcomeScreenShown,
+        onNavigateToMachineryOrder = onNavigateToMachineryOrder,
+        onNavigateToWelcomeScreen = onNavigateToWelcomeScreen
     )
 }
 
 @Composable
 fun OrderListScreen(
     uiState: MachineryOrderListState,
-    onNavigateToMachineryOrder: () -> Unit
+    welcomeScreenShown: Boolean,
+    onNavigateToMachineryOrder: () -> Unit,
+    onNavigateToWelcomeScreen: () -> Unit
 ) {
+    LaunchedEffect(key1 = true){
+        if (welcomeScreenShown.not()){
+            onNavigateToWelcomeScreen()
+        }
+    }
     if (uiState.noMachineryOrdersFound) {
         EmptyOrderListScreen()
     } else {
