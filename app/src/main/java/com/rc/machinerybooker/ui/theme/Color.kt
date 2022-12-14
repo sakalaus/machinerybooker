@@ -2,18 +2,18 @@ package com.rc.machinerybooker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val md_theme_light_primary = Color(0xFF00629E)
+val md_theme_light_primary = Color(0xFF00687A)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
-val md_theme_light_primaryContainer = Color(0xFFCFE5FF)
-val md_theme_light_onPrimaryContainer = Color(0xFF001D34)
+val md_theme_light_primaryContainer = Color(0xFF448AFF)
+val md_theme_light_onPrimaryContainer = Color.White
 val md_theme_light_secondary = Color(0xFF00677C)
 val md_theme_light_onSecondary = Color(0xFFFFFFFF)
 val md_theme_light_secondaryContainer = Color(0xFFB1ECFF)
 val md_theme_light_onSecondaryContainer = Color(0xFF001F27)
-val md_theme_light_tertiary = Color(0xFF00687A)
+val md_theme_light_tertiary = Color(0xFF00629E)
 val md_theme_light_onTertiary = Color(0xFFFFFFFF)
-val md_theme_light_tertiaryContainer = Color(0xFFACEDFF)
-val md_theme_light_onTertiaryContainer = Color(0xFF001F26)
+val md_theme_light_tertiaryContainer = Color(0xFFCFE5FF)
+val md_theme_light_onTertiaryContainer = Color(0xFF001D34)
 val md_theme_light_error = Color(0xFFBA1A1A)
 val md_theme_light_errorContainer = Color(0xFFFFDAD6)
 val md_theme_light_onError = Color(0xFFFFFFFF)

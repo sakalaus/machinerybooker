@@ -124,7 +124,7 @@ fun MachineryOrderItem(
             MachineryOrderItemRow(
                 text = "12.06.22 14:00-16.00 ${extendedData.vehicle?.description}",
                 fontWeight = FontWeight.Bold,
-                background = MaterialTheme.colorScheme.primaryContainer
+                background = MaterialTheme.colorScheme.tertiaryContainer
             )
             MachineryOrderItemRow(text = "${extendedData.project?.externalId} ${extendedData.project?.description}")
             MachineryOrderItemRowTwoColumns(
@@ -134,7 +134,7 @@ fun MachineryOrderItem(
             MachineryOrderItemRowTwoColumns(
                 textStart = stringResource(machineryOrder.status.resId),
                 textEnd = "${extendedData.clientDepartment?.description} -> ${extendedData.providerDepartment?.description}",
-                colorStart = if (machineryOrder.status == OrderStatus.Cancelled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                colorStart = if (machineryOrder.status == OrderStatus.Cancelled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiaryContainer
             )
         }
     }

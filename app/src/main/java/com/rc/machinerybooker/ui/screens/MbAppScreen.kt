@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rc.machinerybooker.navigation.MbNavHost
 import com.rc.machinerybooker.navigation.MbTopLevelDestination
+import com.rc.machinerybooker.R
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +51,21 @@ fun MbAppScreen(
                 onNavigateToDestination = appState::navigateToTopLevelDestination,
                 currentDestination = appState.currentDestination
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { },
+                modifier = Modifier,
+                containerColor = Color(0xFF448AFF)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(id = R.string.add_new),
+                )
+//                Text(
+//                    text = stringResource(id = R.string.add_new),
+//                )
+            }
         }
     ) { innerPadding ->
         MbNavHost(
@@ -68,10 +85,10 @@ fun MbTopBar(
     actionIconContentDescription: String,
     onActionClick: () -> Unit,
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors()
-){
+) {
     CenterAlignedTopAppBar(
         modifier = modifier,
-        title = {Text("Преголь: Заявки")},
+        title = { Text("Преголь: Заявки") },
         navigationIcon = {},
         colors = colors,
         actions = {
@@ -96,11 +113,11 @@ fun RowScope.MbBottomBarItem(
     enabled: Boolean = true,
     label: @Composable (() -> Unit)? = null,
     alwaysShowLabel: Boolean = true
-){
+) {
     NavigationBarItem(
         modifier = modifier,
         label = label ?: {},
-        selected =selected,
+        selected = selected,
         icon = if (selected) selectedIcon else icon,
         onClick = onClick,
         enabled = enabled,
@@ -119,7 +136,8 @@ fun RowScope.MbBottomBarItem(
 fun MbBottomBar(
     destinations: List<MbTopLevelDestination>,
     onNavigateToDestination: (MbTopLevelDestination) -> Unit,
-    currentDestination: NavDestination?) {
+    currentDestination: NavDestination?
+) {
 
     NavigationBar(
         tonalElevation = 0.dp,
@@ -128,7 +146,7 @@ fun MbBottomBar(
             val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
             MbBottomBarItem(
                 selected = selected,
-                onClick = {onNavigateToDestination(destination)},
+                onClick = { onNavigateToDestination(destination) },
                 icon = {
                     val icon = if (selected) {
                         destination.selectedIcon
@@ -140,7 +158,12 @@ fun MbBottomBar(
                         contentDescription = null
                     )
                 },
-                label = { Text(stringResource(destination.iconTextId)) }
+                label = {
+                    Text(
+                        color = Color.Black,
+                        text = stringResource(destination.iconTextId)
+                    )
+                }
             )
         }
     }
@@ -150,8 +173,10 @@ fun MbBottomBar(
 object MbNavigationDefaults {
     @Composable
     fun navigationContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
+
     @Composable
     fun navigationSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
+
     @Composable
     fun navigationIndicatorColor() = MaterialTheme.colorScheme.primaryContainer
 }

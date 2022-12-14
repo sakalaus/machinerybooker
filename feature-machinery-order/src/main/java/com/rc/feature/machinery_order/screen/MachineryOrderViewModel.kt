@@ -14,6 +14,12 @@ class MachineryOrderViewModel @Inject constructor(
 
     }
 
+    fun onEvent(
+        event: MachineryOrderEvent
+    ){
+
+    }
+
 
 
 }
