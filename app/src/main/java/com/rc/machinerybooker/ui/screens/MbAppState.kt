@@ -41,7 +41,7 @@ class MbAppState(
 
     val currentTopLevelDestination: MbTopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
-            machineryOrderListNavigationRoute -> ORDER_LIST
+            machineryOrderListNavigationRoute -> MACHINERY_ORDER_LIST
             settingsNavigationRoute -> SETTINGS
             else -> null
         }
@@ -60,7 +60,7 @@ class MbAppState(
         }
 
         when (topLevelDestination) {
-            ORDER_LIST -> navController.navigateToMachineryOrderList(topLevelNavOptions)
+            MACHINERY_ORDER_LIST -> navController.navigateToMachineryOrderList(topLevelNavOptions)
             SETTINGS -> navController.navigateToSettings(topLevelNavOptions)
         }
     }

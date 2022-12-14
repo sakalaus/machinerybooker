@@ -6,14 +6,14 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.rc.feature.machinery_order.screen.MachineryOrderRoute
 
-const val machineryOrderRoure = "machinery_order_route"
+const val machineryOrderRoute = "machinery_order_route"
 
-fun NavController.navigateToMachineryOrderList(navOptions: NavOptions? = null) {
-    this.navigate(machineryOrderRoure, navOptions)
+fun NavController.navigateToMachineryOrder(navOptions: NavOptions? = null) {
+    this.navigate(machineryOrderRoute, navOptions)
 }
 
-fun NavGraphBuilder.machineryOrderListRoute() {
-    composable(route = machineryOrderRoure) {
+fun NavGraphBuilder.machineryOrderRoute() {
+    composable(route = machineryOrderRoute) {
         MachineryOrderRoute()
     }
 }

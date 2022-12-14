@@ -6,22 +6,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.rc.feature.machinery_order.navigation.machineryOrderRoute
 import com.rc.machinerybooker.feature.machineryorderlist.navigation.machineryOrderListNavigationRoute
 import com.rc.machinerybooker.feature.machineryorderlist.navigation.machineryOrderListRoute
 import com.rc.machinerybooker.feature.settings.navigation.settingsRoute
 
 @Composable
-fun MbNavHost (
+fun MbNavHost(
     navController: NavHostController,
     onBackClick: () -> Unit,
     innerPadding: PaddingValues,
-    startDestination: String = machineryOrderListNavigationRoute){
+    startDestination: String = machineryOrderListNavigationRoute
+) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = Modifier.padding(paddingValues = innerPadding),
     ) {
-        machineryOrderListRoute()
+        machineryOrderRoute()
+        machineryOrderListRoute { navController.onNavigateToMachineryOrder() }
         settingsRoute()
     }
+}
+
+fun NavHostController.onNavigateToMachineryOrder(
+) {
+    navigate(machineryOrderRoute)
 }

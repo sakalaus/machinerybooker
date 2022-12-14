@@ -2,6 +2,7 @@ package com.rc.machinerybooker.feature.machineryorderlist.screen
 
 import android.graphics.fonts.FontStyle
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -34,17 +35,20 @@ import com.rc.machinerybooker.domain.usecases.extendedMachineryOrderMapType
 
 @Composable
 fun OrderListRoute(
-    viewModel: MachineryOrderListViewModel = hiltViewModel()
+    viewModel: MachineryOrderListViewModel = hiltViewModel(),
+    onNavigateToMachineryOrder: () -> Unit
 ) {
     val currentUiState = viewModel.uiState.collectAsState().value
     OrderListScreen(
-        uiState = currentUiState
+        uiState = currentUiState,
+        onNavigateToMachineryOrder = onNavigateToMachineryOrder
     )
 }
 
 @Composable
 fun OrderListScreen(
-    uiState: MachineryOrderListState
+    uiState: MachineryOrderListState,
+    onNavigateToMachineryOrder: () -> Unit
 ) {
     if (uiState.noMachineryOrdersFound) {
         EmptyOrderListScreen()
@@ -52,7 +56,8 @@ fun OrderListScreen(
         OrderListScreen(
             machineryOrdersMap = uiState.machineryOrdersMap,
             isLoading = uiState.isLoading,
-            isFaulty = uiState.isFaulty
+            isFaulty = uiState.isFaulty,
+            onNavigateToMachineryOrder = onNavigateToMachineryOrder
         )
     }
 }
@@ -69,7 +74,8 @@ fun EmptyOrderListScreen() {
 fun OrderListScreen(
     machineryOrdersMap: extendedMachineryOrderMapType,
     isLoading: Boolean,
-    isFaulty: Boolean
+    isFaulty: Boolean,
+    onNavigateToMachineryOrder: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -86,6 +92,9 @@ fun OrderListScreen(
                     .padding(8.dp)
                     .fillMaxWidth()
                     .height(96.dp)
+                    .clickable {
+                        onNavigateToMachineryOrder()
+                    }
             ) {
                 Column(
                     modifier = Modifier

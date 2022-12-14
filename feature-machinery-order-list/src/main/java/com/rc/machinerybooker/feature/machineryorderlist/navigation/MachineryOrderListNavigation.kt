@@ -2,6 +2,7 @@ package com.rc.machinerybooker.feature.machineryorderlist.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.rc.machinerybooker.feature.machineryorderlist.screen.OrderListRoute
@@ -12,8 +13,13 @@ fun NavController.navigateToMachineryOrderList(navOptions: NavOptions? = null) {
     this.navigate(machineryOrderListNavigationRoute, navOptions)
 }
 
-fun NavGraphBuilder.machineryOrderListRoute() {
+fun NavGraphBuilder.machineryOrderListRoute(
+    onNavigateToMachineryOrder: () -> Unit
+) {
     composable(route = machineryOrderListNavigationRoute) {
-        OrderListRoute()
+        OrderListRoute(
+            onNavigateToMachineryOrder = onNavigateToMachineryOrder
+        )
     }
 }
+
