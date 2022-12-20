@@ -19,8 +19,9 @@ fun MbNavHost(
     onWelcomeScreenShow: () -> Unit,
     welcomeScreenShown: Boolean,
     onBackClick: () -> Unit,
+    onScreenChanged: (String) -> Unit,
     innerPadding: PaddingValues,
-    startDestination: String = welcomeScreenNavigationRoute
+    startDestination: String = machineryOrderListNavigationRoute
 ) {
     NavHost(
         navController = navController,
@@ -28,16 +29,22 @@ fun MbNavHost(
         modifier = Modifier.padding(paddingValues = innerPadding),
     ) {
         welcomeScreenRoute(
+            onScreenChanged = onScreenChanged,
             onWelcomeScreenShow = onWelcomeScreenShow,
             onNavigateToMachineryOrderList = { navController.onNavigateToMachineryOrderList() }
         )
-        machineryOrderRoute()
+        machineryOrderRoute(
+            onScreenChanged = onScreenChanged
+        )
         machineryOrderListRoute(
+            onScreenChanged = onScreenChanged,
             welcomeScreenShown = welcomeScreenShown,
             onNavigateToMachineryOrder = { navController.onNavigateToMachineryOrder() },
             onNavigateToWelcomeScreen = { navController.onNavigateToWelcomeScreen() }
         )
-        settingsRoute()
+        settingsRoute(
+            onScreenChanged = onScreenChanged
+        )
     }
 }
 

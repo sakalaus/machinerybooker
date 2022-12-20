@@ -10,6 +10,9 @@ import javax.inject.Inject
 class RepositoryMock @Inject constructor(): Repository {
 
     override fun observeMachineryOrderList(): Flow<List<MachineryOrder>> = flowOf(mockMachineryOrders)
+    override fun observeVehicles(): Flow<List<Vehicle>> = flowOf(mockVehicles)
+    override fun observeProjects(): Flow<List<Project>> = flowOf(mockProjects)
+    override fun observeDepartments(): Flow<List<Department>> = flowOf(mockDepartments)
 
     override fun getMachineryOrder(orderId: Long): MachineryOrder? = mockMachineryOrders.firstOrNull {
         it.id == orderId

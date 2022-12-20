@@ -12,7 +12,10 @@ fun NavController.navigateToMachineryOrder(navOptions: NavOptions? = null) {
     this.navigate(machineryOrderRoute, navOptions)
 }
 
-fun NavGraphBuilder.machineryOrderRoute() {
+fun NavGraphBuilder.machineryOrderRoute(
+    onScreenChanged: (String) -> Unit
+) {
+    onScreenChanged(route ?: "")
     composable(route = machineryOrderRoute) {
         MachineryOrderRoute()
     }

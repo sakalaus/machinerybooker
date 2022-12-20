@@ -13,10 +13,12 @@ fun NavController.navigateToWelcomeScreen(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.welcomeScreenRoute(
+    onScreenChanged: (String) -> Unit,
     onWelcomeScreenShow: () -> Unit,
     onNavigateToMachineryOrderList: () -> Unit
 ){
     composable(route = welcomeScreenNavigationRoute) {
+        onScreenChanged(route ?: "")
         WelcomeScreenRoute(
             onWelcomeScreenShow = onWelcomeScreenShow,
             onNavigateToMachineryOrderList = onNavigateToMachineryOrderList

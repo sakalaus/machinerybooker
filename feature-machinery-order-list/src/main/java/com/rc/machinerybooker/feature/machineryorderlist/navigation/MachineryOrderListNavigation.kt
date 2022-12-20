@@ -16,8 +16,10 @@ fun NavController.navigateToMachineryOrderList(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.machineryOrderListRoute(
     welcomeScreenShown: Boolean,
     onNavigateToMachineryOrder: () -> Unit,
-    onNavigateToWelcomeScreen: () -> Unit
+    onNavigateToWelcomeScreen: () -> Unit,
+    onScreenChanged: (String) -> Unit
 ) {
+    onScreenChanged(route ?: "")
     composable(route = machineryOrderListNavigationRoute) {
         OrderListRoute(
             welcomeScreenShown = welcomeScreenShown,

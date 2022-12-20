@@ -22,6 +22,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rc.machinerybooker.navigation.MbNavHost
 import com.rc.machinerybooker.navigation.MbTopLevelDestination
 import com.rc.machinerybooker.R
+import com.rc.machinerybooker.ui.screens.MbAppScreenEvent.*
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,21 +66,23 @@ fun MbAppScreen(
                 ExtendedFloatingActionButton(
                     onClick = { },
                     modifier = Modifier,
-                    containerColor = Color(0xFF448AFF)
+                    containerColor = FloatingActionButtonDefaults.containerColor.copy(alpha = 0.8f)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(id = R.string.add_new),
+                        contentDescription = stringResource(id = R.string.add_new_feminine),
                     )
+                    Text(text = stringResource(id = R.string.add_new_feminine))
                 }
             }
         }
     ) { innerPadding ->
         MbNavHost(
             navController = appState.navController,
-            onWelcomeScreenShow = { appViewModel.onEvent(MbAppScreenEvent.WelcomeScreenShown) },
             welcomeScreenShown = currentAppDataState.welcomeScreenShown,
+            onWelcomeScreenShow = { appViewModel.onEvent(WelcomeScreenShown) },
             onBackClick = appState::onBackClick,
+            onScreenChanged = { appViewModel.onEvent(ScreenChanged("")) },
             innerPadding = innerPadding
         )
     }
@@ -97,7 +100,12 @@ fun MbTopBar(
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
-        title = { Text("Преголь: Заявки") },
+        title = {
+            Text(
+                style = MaterialTheme.typography.titleMedium,
+                text = "Преголь: Заявки"
+            )
+        },
         navigationIcon = {},
         colors = colors,
         actions = {

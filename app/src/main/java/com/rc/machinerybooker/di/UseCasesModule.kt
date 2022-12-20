@@ -1,8 +1,7 @@
 package com.rc.machinerybooker.di
 
 import com.rc.machinerybooker.domain.repository.Repository
-import com.rc.machinerybooker.domain.usecases.ObserveMachineryOrderExtendedDataList
-import com.rc.machinerybooker.domain.usecases.UseCases
+import com.rc.machinerybooker.domain.usecases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,6 +14,9 @@ object UseCasesModule {
     @Provides
     @Singleton
     fun provideUseCases (repository: Repository): UseCases = UseCases(
-        observeMachineryOrderExtendedDataList = ObserveMachineryOrderExtendedDataList(repository = repository)
+        observeMachineryOrderExtendedDataList = ObserveMachineryOrderExtendedDataList(repository = repository),
+        observeVehicles = ObserveVehicles(repository = repository),
+        observeProjects = ObserveProjects(repository = repository),
+        observeDepartments = ObserveDepartments(repository = repository),
     )
 }

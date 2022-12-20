@@ -9,6 +9,18 @@ class RepositoryImpl: Repository {
         TODO("Not yet implemented")
     }
 
+    override fun observeVehicles(): Flow<List<Vehicle>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun observeProjects(): Flow<List<Project>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun observeDepartments(): Flow<List<Department>> {
+        TODO("Not yet implemented")
+    }
+
     override fun getMachineryOrder(orderId: Long): MachineryOrder {
         TODO("Not yet implemented")
     }

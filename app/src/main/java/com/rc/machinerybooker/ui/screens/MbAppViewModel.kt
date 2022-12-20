@@ -1,6 +1,7 @@
 package com.rc.machinerybooker.ui.screens
 
 import androidx.lifecycle.ViewModel
+import com.rc.machinerybooker.ui.screens.MbAppScreenEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,9 +17,20 @@ class MbAppViewModel @Inject constructor(
 
     fun onEvent(event: MbAppScreenEvent) {
         when (event) {
-            MbAppScreenEvent.WelcomeScreenShown -> _uiState.update { it.copy(welcomeScreenShown = true) }
+            WelcomeScreenShown -> markWelcomeScreenAsShown()
+            is ScreenChanged -> onScreenChanged(event.destination)
         }
     }
 
+    private fun onScreenChanged(destination: String) {
+        when (destination) {
+
+            else -> Unit
+        }
+    }
+
+    private fun markWelcomeScreenAsShown() = _uiState.update {
+        it.copy(welcomeScreenShown = true)
+    }
 
 }

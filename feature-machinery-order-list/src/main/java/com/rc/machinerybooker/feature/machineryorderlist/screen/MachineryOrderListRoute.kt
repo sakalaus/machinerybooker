@@ -146,7 +146,7 @@ fun MachineryOrderItem(
             MachineryOrderItemRowTwoColumns(
                 textStart = stringResource(machineryOrder.status.resId),
                 textEnd = "${extendedData.clientDepartment?.description} -> ${extendedData.providerDepartment?.description}",
-                colorStart = if (machineryOrder.status == OrderStatus.Cancelled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiaryContainer
+                colorStart = if (machineryOrder.status == OrderStatus.Cancelled) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primaryContainer
             )
         }
     }

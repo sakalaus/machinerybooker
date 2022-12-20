@@ -1,18 +1,24 @@
 package com.rc.feature.machinery_order.screen
 
+import com.rc.machinerybooker.domain.entities.Department
 import com.rc.machinerybooker.domain.entities.OrderStatus
+import com.rc.machinerybooker.domain.entities.Project
+import com.rc.machinerybooker.domain.entities.Vehicle
 
 data class MachineryOrderState(
     val id: Long = 0L,
     val externalId: String = "",
     val description: String = "",
-    val clientDepartmentId: Long = 0L,
-    val providerDepartmentId: Long = 0L,
-    val userId: Long = 0L,
+    val departmentOptions: List<Department> = emptyList(),
+    val clientDepartment: Department? = null,
+    val providerDepartment: Department? = null,
     val status: OrderStatus = OrderStatus.Draft,
-    val vehicleId: Long = 0L,
-    val projectId: Long = 0L,
+    val vehicleOptions: List<Vehicle> = emptyList(),
+    val vehicle: Vehicle? = null,
+    val projectOptions: List<Project> = emptyList(),
+    val project: Project? = null,
     val locationDescription: String = "",
+    val userId: Long = 0L,
     val createdTimeStamp: Long = 0L,
     val dateTimeStamp: Long = 0L,
     val plannedStartTimeStamp: Long = 0L,

@@ -5,6 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface Repository {
     fun observeMachineryOrderList(): Flow<List<MachineryOrder>>
+    fun observeVehicles(): Flow<List<Vehicle>>
+    fun observeProjects(): Flow<List<Project>>
+    fun observeDepartments(): Flow<List<Department>>
     fun getMachineryOrder(orderId: Long): MachineryOrder?
     fun getProject(projectId: Long): Project?
     fun getDepartment(departmentId: Long): Department?

@@ -2,5 +2,5 @@
     <string name="app_name">machinery booker</string>
     <string name="settings">Настройки</string>
     <string name="list">Заявки</string>
-    <string name="add_new">Новый</string>
+    <string name="add_new_feminine">Новая</string>
 </resources>
