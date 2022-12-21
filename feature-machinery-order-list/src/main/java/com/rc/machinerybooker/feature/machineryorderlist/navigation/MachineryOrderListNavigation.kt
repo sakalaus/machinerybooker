@@ -15,7 +15,7 @@ fun NavController.navigateToMachineryOrderList(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.machineryOrderListRoute(
     welcomeScreenShown: Boolean,
-    onNavigateToMachineryOrder: () -> Unit,
+    onNavigateToMachineryOrder: (Long) -> Unit,
     onNavigateToWelcomeScreen: () -> Unit,
     onScreenChanged: (String) -> Unit
 ) {

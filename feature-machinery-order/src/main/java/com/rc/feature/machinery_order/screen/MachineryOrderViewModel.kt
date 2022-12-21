@@ -1,18 +1,22 @@
 package com.rc.feature.machinery_order.screen
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rc.machinerybooker.domain.entities.Department
+import com.rc.machinerybooker.domain.entities.MachineryOrderFilter
 import com.rc.machinerybooker.domain.entities.Project
 import com.rc.machinerybooker.domain.entities.Vehicle
+import com.rc.machinerybooker.domain.usecases.ExtendedMachineryOrderData
 import com.rc.machinerybooker.domain.usecases.UseCases
+import com.rc.machinerybooker.domain.usecases.extendedMachineryOrderMapType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class MachineryOrderViewModel @Inject constructor(
-    private val userCases: UseCases
+    private val useCases: UseCases,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MachineryOrderState())
@@ -25,19 +29,44 @@ class MachineryOrderViewModel @Inject constructor(
 
     private fun initializeObservers() {
 
-        userCases.observeVehicles()
+        savedStateHandle.get<Long>("machineryOrderId")?.let { machineryOrderId ->
+            useCases.observeMachineryOrderExtendedDataList(
+                machineryOrderFilter = MachineryOrderFilter(id = machineryOrderId)
+            ).onEach { machineryOrderMap: extendedMachineryOrderMapType ->
+                machineryOrderMap.entries.first().let { machineryOrderData ->
+                    val machineryOrder = machineryOrderData.key
+                    val extendedData = machineryOrderData.value
+                    _uiState.update {
+                        it.copy(
+                            id = machineryOrder.id,
+                            externalId = machineryOrder.externalId,
+                            description = machineryOrder.description,
+                            locationDescription = machineryOrder.location,
+                            clientDepartment = extendedData.clientDepartment,
+                            providerDepartment = extendedData.providerDepartment,
+                            project = extendedData.project,
+                            vehicle = extendedData.vehicle,
+                            createdTimeStamp = machineryOrder.createdTimeStamp
+                        )
+                    }
+                }
+            }
+                .launchIn(viewModelScope)
+        }
+
+        useCases.observeVehicles()
             .onEach { vehicles ->
                 _uiState.update { it.copy(vehicleOptions = vehicles) }
             }
             .launchIn(viewModelScope)
 
-        userCases.observeProjects()
+        useCases.observeProjects()
             .onEach { projects ->
                 _uiState.update { it.copy(projectOptions = projects) }
             }
             .launchIn(viewModelScope)
 
-        userCases.observeDepartments()
+        useCases.observeDepartments()
             .onEach { departments ->
                 _uiState.update { it.copy(departmentOptions = departments) }
             }

@@ -1,8 +1,6 @@
 package com.rc.feature.machinery_order.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
+import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.rc.feature.machinery_order.screen.MachineryOrderRoute
 
@@ -16,7 +14,12 @@ fun NavGraphBuilder.machineryOrderRoute(
     onScreenChanged: (String) -> Unit
 ) {
     onScreenChanged(route ?: "")
-    composable(route = machineryOrderRoute) {
-        MachineryOrderRoute()
+    composable(
+        route = "machinery_order_route/?machineryOrderId={machineryOrderId}",
+        arguments = listOf(navArgument("machineryOrderId") { type = NavType.LongType })
+    ) { backStackEntry ->
+        MachineryOrderRoute(
+            machineryOrderId = backStackEntry.arguments?.getLong("machineryOrderId")
+        )
     }
 }

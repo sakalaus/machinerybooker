@@ -18,5 +18,6 @@ object UseCasesModule {
         observeVehicles = ObserveVehicles(repository = repository),
         observeProjects = ObserveProjects(repository = repository),
         observeDepartments = ObserveDepartments(repository = repository),
+        observeMachineryOrder = ObserveMachineryOrder(repository = repository)
     )
 }

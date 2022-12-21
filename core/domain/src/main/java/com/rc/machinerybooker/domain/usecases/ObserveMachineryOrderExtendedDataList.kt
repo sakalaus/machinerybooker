@@ -10,7 +10,7 @@ typealias extendedMachineryOrderMapType = Map<MachineryOrder, ExtendedMachineryO
 
 class ObserveMachineryOrderExtendedDataList @Inject constructor(private val repository: Repository) {
     operator fun invoke(machineryOrderFilter: MachineryOrderFilter): Flow<extendedMachineryOrderMapType> {
-        return repository.observeMachineryOrderList().map { machineryOrderList ->
+        return repository.observeMachineryOrderList(machineryOrderFilter).map { machineryOrderList ->
             machineryOrderList.associateWith { machineryOrder ->
                 ExtendedMachineryOrderData(
                     clientDepartment = repository.getDepartment(departmentId = machineryOrder.clientDepartmentId),

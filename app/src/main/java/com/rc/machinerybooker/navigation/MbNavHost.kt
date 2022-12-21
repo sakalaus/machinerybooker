@@ -39,7 +39,7 @@ fun MbNavHost(
         machineryOrderListRoute(
             onScreenChanged = onScreenChanged,
             welcomeScreenShown = welcomeScreenShown,
-            onNavigateToMachineryOrder = { navController.onNavigateToMachineryOrder() },
+            onNavigateToMachineryOrder = { machineryOrderId -> navController.onNavigateToMachineryOrder(machineryOrderId) },
             onNavigateToWelcomeScreen = { navController.onNavigateToWelcomeScreen() }
         )
         settingsRoute(
@@ -49,8 +49,9 @@ fun MbNavHost(
 }
 
 fun NavHostController.onNavigateToMachineryOrder(
+    machineryOrderId: Long
 ) {
-    navigate(machineryOrderRoute)
+    navigate("$machineryOrderRoute/?machineryOrderId=${machineryOrderId}")
 }
 
 

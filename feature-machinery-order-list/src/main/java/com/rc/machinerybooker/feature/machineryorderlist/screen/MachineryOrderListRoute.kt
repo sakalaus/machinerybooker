@@ -1,6 +1,5 @@
 package com.rc.machinerybooker.feature.machineryorderlist.screen
 
-import android.graphics.fonts.FontStyle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -38,7 +37,7 @@ import com.rc.machinerybooker.domain.usecases.extendedMachineryOrderMapType
 fun OrderListRoute(
     viewModel: MachineryOrderListViewModel = hiltViewModel(),
     welcomeScreenShown: Boolean,
-    onNavigateToMachineryOrder: () -> Unit,
+    onNavigateToMachineryOrder: (Long) -> Unit,
     onNavigateToWelcomeScreen: () -> Unit
 ) {
     val currentUiState = viewModel.uiState.collectAsState().value
@@ -54,7 +53,7 @@ fun OrderListRoute(
 fun OrderListScreen(
     uiState: MachineryOrderListState,
     welcomeScreenShown: Boolean,
-    onNavigateToMachineryOrder: () -> Unit,
+    onNavigateToMachineryOrder: (Long) -> Unit,
     onNavigateToWelcomeScreen: () -> Unit
 ) {
     LaunchedEffect(key1 = true){
@@ -87,7 +86,7 @@ fun OrderListScreen(
     machineryOrdersMap: extendedMachineryOrderMapType,
     isLoading: Boolean,
     isFaulty: Boolean,
-    onNavigateToMachineryOrder: () -> Unit
+    onNavigateToMachineryOrder: (Long) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -105,7 +104,7 @@ fun OrderListScreen(
                     .fillMaxWidth()
                     .height(96.dp)
                     .clickable {
-                        onNavigateToMachineryOrder()
+                        onNavigateToMachineryOrder(machineryOrder.id)
                     }
             ) {
                 Column(

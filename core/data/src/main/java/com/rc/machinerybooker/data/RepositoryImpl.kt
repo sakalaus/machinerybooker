@@ -5,7 +5,7 @@ import com.rc.machinerybooker.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
 
 class RepositoryImpl: Repository {
-    override fun observeMachineryOrderList(): Flow<List<MachineryOrder>> {
+    override fun observeMachineryOrderList(machineryOrderFilter: MachineryOrderFilter): Flow<List<MachineryOrder>> {
         TODO("Not yet implemented")
     }
 
@@ -38,6 +38,10 @@ class RepositoryImpl: Repository {
     }
 
     override fun getUser(userId: Long): User? {
+        TODO("Not yet implemented")
+    }
+
+    override fun observeMachineryOrder(machineryOrderId: Long): Flow<MachineryOrder> {
         TODO("Not yet implemented")
     }
 }

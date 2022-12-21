@@ -19,7 +19,8 @@ import com.rc.machinerybooker.domain.entities.representation
 
 @Composable
 fun MachineryOrderRoute(
-    viewModel: MachineryOrderViewModel = hiltViewModel()
+    viewModel: MachineryOrderViewModel = hiltViewModel(),
+    machineryOrderId: Long? = null
 ) {
     val currentUiState = viewModel.uiState.collectAsState().value
     MachineryOrderScreen(
@@ -117,7 +118,7 @@ fun RowScope.OutlinedCardSelectable(
 ) {
     OutlinedCard(
         modifier = Modifier
-            .wrapContentSize()
+            .requiredWidth(96.dp)
             .padding(horizontal = 4.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp

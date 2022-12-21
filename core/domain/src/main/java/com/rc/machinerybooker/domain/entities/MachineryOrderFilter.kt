@@ -1,6 +1,7 @@
 package com.rc.machinerybooker.domain.entities
 
 data class MachineryOrderFilter(
+    val id: Long? = null,
     val userIds: List<Long> = emptyList(),
     val clientDepartmentIds: List<Long> = emptyList(),
     val providerDepartmentIds: List<Long> = emptyList(),
