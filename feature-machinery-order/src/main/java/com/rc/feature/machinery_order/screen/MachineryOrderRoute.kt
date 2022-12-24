@@ -40,7 +40,7 @@ fun MachineryOrderRoute(
                 )
             )
         },
-        onDateSelect = { date, dateType -> viewModel.onEvent(
+        onDateTimeSelect = { date, dateType -> viewModel.onEvent(
             MachineryOrderEvent.DateSelect(date, dateType),
         )}
     )
@@ -51,7 +51,7 @@ fun MachineryOrderRoute(
 fun MachineryOrderScreen(
     currentUiState: MachineryOrderState,
     onValueSelect: (Any) -> Unit,
-    onDateSelect: (LocalDate, MachineryOrderDateType) -> Unit
+    onDateTimeSelect: (LocalDateTime, MachineryOrderDateType) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -126,17 +126,24 @@ fun MachineryOrderScreen(
             value = currentUiState.plannedStartLocalDateTime,
             stringValue = currentUiState.plannedStartDateString,
             dateType = MachineryOrderDateType.StartPlanned,
-            onValueSelect = onDateSelect
+            onValueSelect = onDateTimeSelect
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        RowWithTimePickerField(
+            value = currentUiState.plannedStartLocalDateTime,
+            stringValue = currentUiState.plannedStartHoursMinutesString,
+            dateType = MachineryOrderDateType.StartPlanned,
+            onValueSelect = onDateTimeSelect
         )
     }
 }
 
 @Composable
-fun ColumnScope.RowWithDatePickerField(
+fun RowWithDatePickerField(
     value: LocalDateTime,
     stringValue: String,
     dateType: MachineryOrderDateType,
-    onValueSelect: (LocalDate, MachineryOrderDateType) -> Unit,
+    onValueSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -154,13 +161,36 @@ fun ColumnScope.RowWithDatePickerField(
     }
 }
 
+@Composable
+fun RowWithTimePickerField(
+    value: LocalDateTime,
+    stringValue: String,
+    dateType: MachineryOrderDateType,
+    onValueSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TimePickerField(
+            value = value,
+            stringValue = stringValue,
+            dateType = dateType,
+            onValueSelect = onValueSelect
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerField(
     value: LocalDateTime,
     stringValue: String,
     dateType: MachineryOrderDateType,
-    onValueSelect: (LocalDate, MachineryOrderDateType) -> Unit
+    onValueSelect: (LocalDateTime, MachineryOrderDateType) -> Unit
 ) {
     val dateDialogState = rememberMaterialDialogState()
     OutlinedTextField(
@@ -195,8 +225,55 @@ fun DatePickerField(
         datepicker(
             initialDate = value.toLocalDate(),
             title = "Pick a date"
-        ) {
-            onValueSelect(it, dateType)
+        ) { selectedDate ->
+            onValueSelect(LocalDateTime.of(selectedDate, value.toLocalTime()), dateType)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerField(
+    value: LocalDateTime,
+    stringValue: String,
+    dateType: MachineryOrderDateType,
+    onValueSelect: (LocalDateTime, MachineryOrderDateType) -> Unit
+) {
+    val dateDialogState = rememberMaterialDialogState()
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .wrapContentWidth()
+            .clickable {
+                dateDialogState.show()
+            }
+            .background(color = Color(0xFFDCE1E8)),
+        enabled = false,
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
+            unfocusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
+            disabledBorderColor = MaterialTheme.colorScheme.primaryContainer,
+            disabledTextColor = MaterialTheme.colorScheme.scrim
+        ),
+        value = stringValue,
+        onValueChange = {},
+
+        readOnly = true,
+        maxLines = 1
+    )
+    MaterialDialog(
+        dialogState = dateDialogState,
+        buttons = {
+            positiveButton(text = "Ok") {
+            }
+            negativeButton(text = "Cancel")
+        }
+    ) {
+        timepicker(
+            initialTime = value.toLocalTime(),
+            title = "Pick a time",
+        ) { selectedTime ->
+            onValueSelect(LocalDateTime.of(value.toLocalDate(), selectedTime), dateType)
         }
     }
 }
@@ -275,13 +352,7 @@ fun DateTimePickerField() {
             negativeButton(text = "Cancel")
         }
     ) {
-        timepicker(
-            initialTime = LocalTime.NOON,
-            title = "Pick a time",
-            timeRange = LocalTime.MIDNIGHT..LocalTime.NOON
-        ) {
-            pickedTime = it
-        }
+
     }
 }
 
@@ -412,6 +483,6 @@ fun MachineryOrderScreenPreview() {
     MachineryOrderScreen(
         currentUiState = MachineryOrderState(),
         onValueSelect = {},
-        onDateSelect = {_,_ ->}
+        onDateTimeSelect = { _, _ ->}
     )
 }

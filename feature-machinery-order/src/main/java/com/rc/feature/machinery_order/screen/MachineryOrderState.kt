@@ -34,4 +34,6 @@ data class MachineryOrderState(
         get() = plannedStartTimeStamp.toLocalDateTime()
     val plannedStartDateString: String
         get() = plannedStartTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"))
+    val plannedStartHoursMinutesString: String
+        get() = plannedStartTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("hh:mm"))
 }

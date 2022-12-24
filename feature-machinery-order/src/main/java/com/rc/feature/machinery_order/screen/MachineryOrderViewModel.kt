@@ -12,8 +12,7 @@ import com.rc.machinerybooker.domain.usecases.UseCases
 import com.rc.machinerybooker.domain.usecases.extendedMachineryOrderMapType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -82,12 +81,12 @@ class MachineryOrderViewModel @Inject constructor(
     ) {
         when (event) {
             is MachineryOrderEvent.ValueSelectFromDropDown -> onSelectFromDropDown(event.value)
-            is MachineryOrderEvent.DateSelect -> onSelectDate(event.value, event.dateType)
+            is MachineryOrderEvent.DateSelect -> onSelectDateTime(event.value, event.dateType)
             else -> Unit
         }
     }
 
-    private fun onSelectDate(value: LocalDate, dateType: MachineryOrderDateType) {
+    private fun onSelectDateTime(value: LocalDateTime, dateType: MachineryOrderDateType) {
         when (dateType) {
             StartPlanned -> _uiState.update {
                 it.copy(
