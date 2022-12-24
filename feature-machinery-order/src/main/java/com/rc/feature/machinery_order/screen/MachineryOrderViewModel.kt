@@ -3,14 +3,17 @@ package com.rc.feature.machinery_order.screen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rc.feature.machinery_order.screen.MachineryOrderDateType.StartPlanned
+import com.rc.machinerybooker.core.utils.toLong
 import com.rc.machinerybooker.domain.entities.MachineryOrderFilter
 import com.rc.machinerybooker.domain.entities.Project
 import com.rc.machinerybooker.domain.entities.Vehicle
-import com.rc.machinerybooker.domain.usecases.ExtendedMachineryOrderData
 import com.rc.machinerybooker.domain.usecases.UseCases
 import com.rc.machinerybooker.domain.usecases.extendedMachineryOrderMapType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,6 +49,7 @@ class MachineryOrderViewModel @Inject constructor(
                             providerDepartment = extendedData.providerDepartment,
                             project = extendedData.project,
                             vehicle = extendedData.vehicle,
+                            plannedStartTimeStamp = machineryOrder.plannedStartTimeStamp,
                             createdTimeStamp = machineryOrder.createdTimeStamp
                         )
                     }
@@ -78,6 +82,18 @@ class MachineryOrderViewModel @Inject constructor(
     ) {
         when (event) {
             is MachineryOrderEvent.ValueSelectFromDropDown -> onSelectFromDropDown(event.value)
+            is MachineryOrderEvent.DateSelect -> onSelectDate(event.value, event.dateType)
+            else -> Unit
+        }
+    }
+
+    private fun onSelectDate(value: LocalDate, dateType: MachineryOrderDateType) {
+        when (dateType) {
+            StartPlanned -> _uiState.update {
+                it.copy(
+                    plannedStartTimeStamp = value.toLong()
+                )
+            }
             else -> Unit
         }
     }

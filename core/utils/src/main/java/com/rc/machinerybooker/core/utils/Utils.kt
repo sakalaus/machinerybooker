@@ -1,11 +1,11 @@
 package com.rc.machinerybooker.core.utils
 
-import java.util.concurrent.TimeUnit
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 
-fun Long.formatAsTime(): String   =
-    String.format("%02d:%02d:%02d",
-        TimeUnit.MILLISECONDS.toHours(this * 1000),
-        TimeUnit.MILLISECONDS.toMinutes(this * 1000) -
-                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(this * 1000)),
-        TimeUnit.MILLISECONDS.toSeconds(this * 1000) -
-                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(this * 1000)));
+fun LocalDate.toLong() = this.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()*1000;
+fun Long.toLocalDateTime(): LocalDateTime = LocalDateTime.ofInstant(
+    Instant.ofEpochSecond(this/1000), TimeZone.getDefault().toZoneId());

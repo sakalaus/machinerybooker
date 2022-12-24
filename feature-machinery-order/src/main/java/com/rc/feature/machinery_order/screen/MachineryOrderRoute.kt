@@ -2,6 +2,7 @@ package com.rc.feature.machinery_order.screen
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -16,6 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rc.machinerybooker.feature.machinery_order.R
 import com.rc.machinerybooker.domain.entities.representation
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.datetime.time.timepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Composable
 fun MachineryOrderRoute(
@@ -31,7 +39,10 @@ fun MachineryOrderRoute(
                     value
                 )
             )
-        }
+        },
+        onDateSelect = { date, dateType -> viewModel.onEvent(
+            MachineryOrderEvent.DateSelect(date, dateType),
+        )}
     )
 }
 
@@ -39,7 +50,8 @@ fun MachineryOrderRoute(
 @Composable
 fun MachineryOrderScreen(
     currentUiState: MachineryOrderState,
-    onValueSelect: (Any) -> Unit
+    onValueSelect: (Any) -> Unit,
+    onDateSelect: (LocalDate, MachineryOrderDateType) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -109,8 +121,170 @@ fun MachineryOrderScreen(
             onValueSelect = {},
             hasDropDownMenu = false
         )
+        Spacer(modifier = Modifier.height(2.dp))
+        RowWithDatePickerField(
+            value = currentUiState.plannedStartLocalDateTime,
+            stringValue = currentUiState.plannedStartDateString,
+            dateType = MachineryOrderDateType.StartPlanned,
+            onValueSelect = onDateSelect
+        )
     }
 }
+
+@Composable
+fun ColumnScope.RowWithDatePickerField(
+    value: LocalDateTime,
+    stringValue: String,
+    dateType: MachineryOrderDateType,
+    onValueSelect: (LocalDate, MachineryOrderDateType) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        DatePickerField(
+            value = value,
+            stringValue = stringValue,
+            dateType = dateType,
+            onValueSelect = onValueSelect
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerField(
+    value: LocalDateTime,
+    stringValue: String,
+    dateType: MachineryOrderDateType,
+    onValueSelect: (LocalDate, MachineryOrderDateType) -> Unit
+) {
+    val dateDialogState = rememberMaterialDialogState()
+    OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .wrapContentWidth()
+            .clickable {
+                dateDialogState.show()
+            }
+            .background(color = Color(0xFFDCE1E8)),
+        enabled = false,
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
+            unfocusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
+            disabledBorderColor = MaterialTheme.colorScheme.primaryContainer,
+            disabledTextColor = MaterialTheme.colorScheme.scrim
+        ),
+        value = stringValue,
+        onValueChange = {},
+
+        readOnly = true,
+        maxLines = 1
+    )
+    MaterialDialog(
+        dialogState = dateDialogState,
+        buttons = {
+            positiveButton(text = "Ok") {
+            }
+            negativeButton(text = "Cancel")
+        }
+    ) {
+        datepicker(
+            initialDate = value.toLocalDate(),
+            title = "Pick a date"
+        ) {
+            onValueSelect(it, dateType)
+        }
+    }
+}
+
+
+@Composable
+fun DateTimePickerField() {
+    var pickedDate by remember {
+        mutableStateOf(LocalDate.now())
+    }
+    var pickedTime by remember {
+        mutableStateOf(LocalTime.NOON)
+    }
+    val formattedDate by remember {
+        derivedStateOf {
+            DateTimeFormatter
+                .ofPattern("MMM dd yyyy")
+                .format(pickedDate)
+        }
+    }
+    val formattedTime by remember {
+        derivedStateOf {
+            DateTimeFormatter
+                .ofPattern("hh:mm")
+                .format(pickedTime)
+        }
+    }
+
+    val dateDialogState = rememberMaterialDialogState()
+    val timeDialogState = rememberMaterialDialogState()
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Button(onClick = {
+            dateDialogState.show()
+        }) {
+            Text(text = "Pick date")
+        }
+        Text(text = formattedDate)
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = {
+            timeDialogState.show()
+        }) {
+            Text(text = "Pick time")
+        }
+        Text(text = formattedTime)
+    }
+    MaterialDialog(
+        dialogState = dateDialogState,
+        buttons = {
+            positiveButton(text = "Ok") {
+            }
+            negativeButton(text = "Cancel")
+        }
+    ) {
+        datepicker(
+            initialDate = LocalDate.now(),
+            title = "Pick a date",
+            allowedDateValidator = {
+                it.dayOfMonth % 2 == 1
+            }
+        ) {
+            pickedDate = it
+        }
+    }
+    MaterialDialog(
+        dialogState = timeDialogState,
+        buttons = {
+            positiveButton(text = "Ok") {
+            }
+            negativeButton(text = "Cancel")
+        }
+    ) {
+        timepicker(
+            initialTime = LocalTime.NOON,
+            title = "Pick a time",
+            timeRange = LocalTime.MIDNIGHT..LocalTime.NOON
+        ) {
+            pickedTime = it
+        }
+    }
+}
+
 
 @Composable
 fun RowScope.OutlinedCardSelectable(
@@ -186,7 +360,7 @@ fun SelectableField(
                 .fillMaxWidth()
                 .background(color = Color(0xFFDCE1E8)),
             value = value.representation(),
-            readOnly = false,
+            readOnly = hasDropDownMenu, // TODO allow text edit even for dropdowns
             placeholder = { stringResource(id = R.string.select_vehicle) },
             maxLines = 1,
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -237,6 +411,7 @@ fun SelectableField(
 fun MachineryOrderScreenPreview() {
     MachineryOrderScreen(
         currentUiState = MachineryOrderState(),
-        onValueSelect = {}
+        onValueSelect = {},
+        onDateSelect = {_,_ ->}
     )
 }
