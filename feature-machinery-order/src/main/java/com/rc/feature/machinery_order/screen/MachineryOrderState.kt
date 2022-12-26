@@ -24,16 +24,51 @@ data class MachineryOrderState(
     val userId: Long = 0L,
     val createdTimeStamp: Long = 0L,
     val plannedStartTimeStamp: Long = 0L,
-    val actualStartTimeStamp: Long = 0L,
+    val actualClientStartOnTime: Boolean = false,
+    val actualClientStartTimeStamp: Long = 0L,
+    val actualProviderStartOnTime: Boolean = false,
+    val actualProviderStartTimeStamp: Long = 0L,
     val plannedFinishTimeStamp: Long = 0L,
-    val actualFinishTimeStamp: Long = 0L,
+    val actualClientFinishOnTime: Boolean = false,
+    val actualClientFinishTimeStamp: Long = 0L,
+    val actualProviderFinishOnTime: Boolean = false,
+    val actualProviderFinishTimeStamp: Long = 0L,
     val leftBaseTimeStamp: Long = 0L,
     val returnedToBaseTimeStamp: Long = 0L
 ){
+
     val plannedStartLocalDateTime: LocalDateTime
         get() = plannedStartTimeStamp.toLocalDateTime()
     val plannedStartDateString: String
         get() = plannedStartTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"))
     val plannedStartHoursMinutesString: String
         get() = plannedStartTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("hh:mm"))
+
+    val actualClientStartLocalDateTime: LocalDateTime
+        get() = actualClientStartTimeStamp.toLocalDateTime()
+    val actualClientStartDateString: String
+        get() = actualClientStartTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"))
+    val actualClientStartHoursMinutesString: String
+        get() = actualClientStartTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("hh:mm"))
+
+    val actualProviderStartLocalDateTime: LocalDateTime
+        get() = actualProviderStartTimeStamp.toLocalDateTime()
+    val actualProviderStartDateString: String
+        get() = actualProviderStartTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"))
+    val actualProviderStartHoursMinutesString: String
+        get() = actualProviderStartTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("hh:mm"))
+    
+    val actualClientFinishLocalDateTime: LocalDateTime
+        get() = actualClientFinishTimeStamp.toLocalDateTime()
+    val actualClientFinishStartDateString: String
+        get() = actualClientFinishTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"))
+    val actualClientFinishHoursMinutesString: String
+        get() = actualClientFinishTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("hh:mm"))
+
+    val actualProviderFinishLocalDateTime: LocalDateTime
+        get() = actualProviderFinishTimeStamp.toLocalDateTime()
+    val actualProviderFinishDateString: String
+        get() = actualProviderFinishTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"))
+    val actualProviderFinishHoursMinutesString: String
+        get() = actualProviderFinishTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("hh:mm"))
 }

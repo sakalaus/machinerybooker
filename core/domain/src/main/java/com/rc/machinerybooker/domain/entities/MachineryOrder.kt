@@ -17,9 +17,11 @@ data class MachineryOrder(
     val createdTimeStamp: Long,
     val dateTimeStamp: Long,
     val plannedStartTimeStamp: Long,
-    val actualStartTimeStamp: Long,
+    val actualClientStartTimeStamp: Long,
+    val actualProviderStartTimeStamp: Long,
     val plannedFinishTimeStamp: Long,
-    val actualFinishTimeStamp: Long,
+    val actualClientFinishTimeStamp: Long,
+    val actualProviderFinishTimeStamp: Long,
     val leftBaseTimeStamp: Long,
     val returnedToBaseTimeStamp: Long
 ){
@@ -27,8 +29,11 @@ data class MachineryOrder(
     val plannedDuration
     get() = plannedFinishTimeStamp - plannedStartTimeStamp
 
-    val actualDuration
-        get() = actualFinishTimeStamp - actualStartTimeStamp
+    val actualClientDuration
+        get() = actualClientFinishTimeStamp - actualClientStartTimeStamp
+
+    val actualProviderDuration
+        get() = actualProviderFinishTimeStamp - actualProviderStartTimeStamp
 }
 
 enum class OrderStatus(@StringRes val resId: Int)

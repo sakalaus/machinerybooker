@@ -49,6 +49,11 @@ class MachineryOrderViewModel @Inject constructor(
                             project = extendedData.project,
                             vehicle = extendedData.vehicle,
                             plannedStartTimeStamp = machineryOrder.plannedStartTimeStamp,
+                            actualClientStartTimeStamp = machineryOrder.actualClientStartTimeStamp,
+                            actualProviderStartTimeStamp = machineryOrder.actualProviderStartTimeStamp,
+                            plannedFinishTimeStamp = machineryOrder.plannedFinishTimeStamp,
+                            actualClientFinishTimeStamp = machineryOrder.actualClientFinishTimeStamp,
+                            actualProviderFinishTimeStamp = machineryOrder.actualProviderFinishTimeStamp,
                             createdTimeStamp = machineryOrder.createdTimeStamp
                         )
                     }
@@ -82,7 +87,39 @@ class MachineryOrderViewModel @Inject constructor(
         when (event) {
             is MachineryOrderEvent.ValueSelectFromDropDown -> onSelectFromDropDown(event.value)
             is MachineryOrderEvent.DateSelect -> onSelectDateTime(event.value, event.dateType)
+            is MachineryOrderEvent.ConfirmOnTime -> onConfirmOnTime(event.checked, event.dateType)
             else -> Unit
+        }
+    }
+
+    private fun onConfirmOnTime(checked: Boolean, dateType: MachineryOrderDateType) {
+        when (dateType) {
+            MachineryOrderDateType.StartActualClient -> _uiState.update {
+                it.copy(
+                    actualClientStartOnTime = checked
+                )
+            }
+            MachineryOrderDateType.StartActualProvider -> _uiState.update {
+                it.copy(
+                   actualProviderStartOnTime = checked
+                )
+            }
+            else -> Unit
+        }
+        if (checked){
+            when (dateType) {
+                MachineryOrderDateType.StartActualClient -> _uiState.update {
+                    it.copy(
+                        actualClientStartTimeStamp = it.plannedStartTimeStamp
+                    )
+                }
+                MachineryOrderDateType.StartActualProvider -> _uiState.update {
+                    it.copy(
+                        actualProviderStartTimeStamp = it.plannedStartTimeStamp
+                    )
+                }
+                else -> Unit
+            }
         }
     }
 
@@ -93,6 +130,16 @@ class MachineryOrderViewModel @Inject constructor(
                     plannedStartTimeStamp = value.toLong()
                 )
             }
+            MachineryOrderDateType.StartActualClient -> _uiState.update {
+                it.copy(
+                    actualClientStartTimeStamp = value.toLong()
+                )
+            }
+            MachineryOrderDateType.StartActualProvider -> _uiState.update {
+            it.copy(
+                actualProviderStartTimeStamp = value.toLong()
+            )
+        }
             else -> Unit
         }
     }

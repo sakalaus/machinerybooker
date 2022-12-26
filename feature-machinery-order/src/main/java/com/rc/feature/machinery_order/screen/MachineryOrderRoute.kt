@@ -40,9 +40,16 @@ fun MachineryOrderRoute(
                 )
             )
         },
-        onDateTimeSelect = { date, dateType -> viewModel.onEvent(
-            MachineryOrderEvent.DateSelect(date, dateType),
-        )}
+        onDateTimeSelect = { date, dateType ->
+            viewModel.onEvent(
+                MachineryOrderEvent.DateSelect(date, dateType),
+            )
+        },
+        onConfirmOnTime = { checked, dateType ->
+            viewModel.onEvent(
+                MachineryOrderEvent.ConfirmOnTime(checked, dateType),
+            )
+        }
     )
 }
 
@@ -51,7 +58,8 @@ fun MachineryOrderRoute(
 fun MachineryOrderScreen(
     currentUiState: MachineryOrderState,
     onValueSelect: (Any) -> Unit,
-    onDateTimeSelect: (LocalDateTime, MachineryOrderDateType) -> Unit
+    onDateTimeSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
+    onConfirmOnTime: (Boolean, MachineryOrderDateType) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -95,7 +103,7 @@ fun MachineryOrderScreen(
                         .background(color = MaterialTheme.colorScheme.tertiaryContainer)
                         .padding(4.dp),
                     style = MaterialTheme.typography.bodyMedium,
-                    text = "Подтверждена"
+                    text = "Подтверждена" // TODO load status
                 )
             }
         }
@@ -129,14 +137,74 @@ fun MachineryOrderScreen(
             onValueSelect = onDateTimeSelect
         )
         Spacer(modifier = Modifier.height(2.dp))
-        RowWithTimePickerField(
-            value = currentUiState.plannedStartLocalDateTime,
-            stringValue = currentUiState.plannedStartHoursMinutesString,
-            dateType = MachineryOrderDateType.StartPlanned,
-            onValueSelect = onDateTimeSelect
+        RowWithTimePickerFields(
+            plannedLDT = currentUiState.plannedStartLocalDateTime,
+            stringPlannedLDT = currentUiState.plannedStartHoursMinutesString,
+            actualClientOnTime = currentUiState.actualClientStartOnTime,
+            actualClientLDT = currentUiState.actualClientStartLocalDateTime,
+            stringActualClientLDT = currentUiState.actualClientStartHoursMinutesString,
+            actualProviderOnTime = currentUiState.actualProviderStartOnTime,
+            actualProviderLDT = currentUiState.actualProviderStartLocalDateTime,
+            stringProviderLDT = currentUiState.actualProviderStartHoursMinutesString,
+            machineryOrderDateTypePlanned = MachineryOrderDateType.StartPlanned,
+            machineryOrderDateTypeClient = MachineryOrderDateType.StartActualClient,
+            machineryOrderDateTypeProvider = MachineryOrderDateType.StartActualProvider,
+            onTimeSelect = onDateTimeSelect,
+            onConfirmOnTime = onConfirmOnTime
         )
     }
 }
+
+@Composable
+fun RowWithTimePickerFields(
+    plannedLDT: LocalDateTime,
+    stringPlannedLDT: String,
+    actualClientOnTime: Boolean,
+    actualClientLDT: LocalDateTime,
+    stringActualClientLDT: String,
+    actualProviderOnTime: Boolean,
+    actualProviderLDT: LocalDateTime,
+    stringProviderLDT: String,
+    machineryOrderDateTypePlanned: MachineryOrderDateType,
+    machineryOrderDateTypeClient: MachineryOrderDateType,
+    machineryOrderDateTypeProvider: MachineryOrderDateType,
+    onTimeSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
+    onConfirmOnTime: (Boolean, MachineryOrderDateType) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(start = 12.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TimePickerField(
+            value = plannedLDT,
+            stringValue = stringPlannedLDT,
+            dateType = machineryOrderDateTypePlanned,
+            onValueSelect = onTimeSelect
+        )
+        Checkbox(checked = actualClientOnTime, onCheckedChange = { checked ->
+            onConfirmOnTime(checked, MachineryOrderDateType.StartActualClient)
+        })
+        TimePickerField(
+            value = actualClientLDT,
+            stringValue = stringActualClientLDT,
+            dateType = machineryOrderDateTypeClient,
+            onValueSelect = onTimeSelect
+        )
+        Checkbox(checked = actualProviderOnTime, onCheckedChange = { checked ->
+            onConfirmOnTime(checked, MachineryOrderDateType.StartActualProvider)
+        })
+        TimePickerField(
+            value = actualProviderLDT,
+            stringValue = stringProviderLDT,
+            dateType = machineryOrderDateTypeProvider,
+            onValueSelect = onTimeSelect
+        )
+    }
+}
+
 
 @Composable
 fun RowWithDatePickerField(
@@ -147,35 +215,12 @@ fun RowWithDatePickerField(
 ) {
     Row(
         modifier = Modifier
-            .padding(4.dp)
+            .padding(start = 12.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
         DatePickerField(
-            value = value,
-            stringValue = stringValue,
-            dateType = dateType,
-            onValueSelect = onValueSelect
-        )
-    }
-}
-
-@Composable
-fun RowWithTimePickerField(
-    value: LocalDateTime,
-    stringValue: String,
-    dateType: MachineryOrderDateType,
-    onValueSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TimePickerField(
             value = value,
             stringValue = stringValue,
             dateType = dateType,
@@ -195,7 +240,7 @@ fun DatePickerField(
     val dateDialogState = rememberMaterialDialogState()
     OutlinedTextField(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .padding(horizontal = 4.dp, vertical = 4.dp)
             .wrapContentWidth()
             .clickable {
                 dateDialogState.show()
@@ -224,7 +269,7 @@ fun DatePickerField(
     ) {
         datepicker(
             initialDate = value.toLocalDate(),
-            title = "Pick a date"
+            title = stringResource(id = R.string.pick_date)
         ) { selectedDate ->
             onValueSelect(LocalDateTime.of(selectedDate, value.toLocalTime()), dateType)
         }
@@ -242,8 +287,8 @@ fun TimePickerField(
     val dateDialogState = rememberMaterialDialogState()
     OutlinedTextField(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 4.dp)
-            .wrapContentWidth()
+            .padding(horizontal = 4.dp, vertical = 4.dp)
+            .width(76.dp)
             .clickable {
                 dateDialogState.show()
             }
@@ -271,7 +316,7 @@ fun TimePickerField(
     ) {
         timepicker(
             initialTime = value.toLocalTime(),
-            title = "Pick a time",
+            title = stringResource(id = R.string.pick_time),
         ) { selectedTime ->
             onValueSelect(LocalDateTime.of(value.toLocalDate(), selectedTime), dateType)
         }
@@ -347,9 +392,9 @@ fun DateTimePickerField() {
     MaterialDialog(
         dialogState = timeDialogState,
         buttons = {
-            positiveButton(text = "Ok") {
+            positiveButton(text = stringResource(id = R.string.ok)) {
             }
-            negativeButton(text = "Cancel")
+            negativeButton(text = stringResource(id = R.string.cancel))
         }
     ) {
 
@@ -479,10 +524,32 @@ fun SelectableField(
 
 @Composable
 @Preview
-fun MachineryOrderScreenPreview() {
-    MachineryOrderScreen(
-        currentUiState = MachineryOrderState(),
-        onValueSelect = {},
-        onDateTimeSelect = { _, _ ->}
+fun RowWithTimePickerFieldsPreview() {
+    val mockLocalDateTime = LocalDateTime.of(2022, 12, 10, 17, 25, 10)
+    val mockLocalDateTimeString = mockLocalDateTime.format(DateTimeFormatter.ofPattern("hh:mm"))
+    RowWithTimePickerFields(
+        plannedLDT = mockLocalDateTime,
+        stringPlannedLDT = mockLocalDateTimeString,
+        onTimeSelect = { _, _ -> },
+        machineryOrderDateTypePlanned = MachineryOrderDateType.StartPlanned,
+        machineryOrderDateTypeClient = MachineryOrderDateType.FinishActualClient,
+        machineryOrderDateTypeProvider = MachineryOrderDateType.FinishActualProvider,
+        actualClientOnTime = false,
+        actualClientLDT = mockLocalDateTime,
+        stringActualClientLDT = mockLocalDateTimeString,
+        actualProviderOnTime = false,
+        actualProviderLDT = mockLocalDateTime,
+        stringProviderLDT = mockLocalDateTimeString,
+        onConfirmOnTime = { _, _ -> }
     )
 }
+
+//@Composable
+//@Preview
+//fun MachineryOrderScreenPreview() {
+//    MachineryOrderScreen(
+//        currentUiState = MachineryOrderState(),
+//        onValueSelect = {},
+//        onDateTimeSelect = { _, _ ->}
+//    )
+//}
