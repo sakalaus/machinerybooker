@@ -152,6 +152,21 @@ fun MachineryOrderScreen(
             onTimeSelect = onDateTimeSelect,
             onConfirmOnTime = onConfirmOnTime
         )
+        RowWithTimePickerFields(
+            plannedLDT = currentUiState.plannedFinishLocalDateTime,
+            stringPlannedLDT = currentUiState.plannedFinishHoursMinutesString,
+            actualClientOnTime = currentUiState.actualClientFinishOnTime,
+            actualClientLDT = currentUiState.actualClientFinishLocalDateTime,
+            stringActualClientLDT = currentUiState.actualClientFinishHoursMinutesString,
+            actualProviderOnTime = currentUiState.actualProviderFinishOnTime,
+            actualProviderLDT = currentUiState.actualProviderFinishLocalDateTime,
+            stringProviderLDT = currentUiState.actualProviderFinishHoursMinutesString,
+            machineryOrderDateTypePlanned = MachineryOrderDateType.FinishPlanned,
+            machineryOrderDateTypeClient = MachineryOrderDateType.FinishActualClient,
+            machineryOrderDateTypeProvider = MachineryOrderDateType.FinishActualProvider,
+            onTimeSelect = onDateTimeSelect,
+            onConfirmOnTime = onConfirmOnTime
+        )
     }
 }
 
@@ -171,37 +186,49 @@ fun RowWithTimePickerFields(
     onTimeSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
     onConfirmOnTime: (Boolean, MachineryOrderDateType) -> Unit
 ) {
-    Row(
+    Card(
         modifier = Modifier
-            .padding(start = 12.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(start = 12.dp, end = 16.dp, top = 4.dp, bottom = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer
+        )
     ) {
-        TimePickerField(
-            value = plannedLDT,
-            stringValue = stringPlannedLDT,
-            dateType = machineryOrderDateTypePlanned,
-            onValueSelect = onTimeSelect
-        )
-        Checkbox(checked = actualClientOnTime, onCheckedChange = { checked ->
-            onConfirmOnTime(checked, MachineryOrderDateType.StartActualClient)
-        })
-        TimePickerField(
-            value = actualClientLDT,
-            stringValue = stringActualClientLDT,
-            dateType = machineryOrderDateTypeClient,
-            onValueSelect = onTimeSelect
-        )
-        Checkbox(checked = actualProviderOnTime, onCheckedChange = { checked ->
-            onConfirmOnTime(checked, MachineryOrderDateType.StartActualProvider)
-        })
-        TimePickerField(
-            value = actualProviderLDT,
-            stringValue = stringProviderLDT,
-            dateType = machineryOrderDateTypeProvider,
-            onValueSelect = onTimeSelect
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TimePickerField(
+                value = plannedLDT,
+                label = stringResource(id = R.string.plan),
+                stringValue = stringPlannedLDT,
+                dateType = machineryOrderDateTypePlanned,
+                onValueSelect = onTimeSelect
+            )
+            Checkbox(checked = actualClientOnTime, onCheckedChange = { checked ->
+                onConfirmOnTime(checked, MachineryOrderDateType.StartActualClient)
+            })
+            TimePickerField(
+                value = actualClientLDT,
+                label = stringResource(id = R.string.actual_client),
+                stringValue = stringActualClientLDT,
+                dateType = machineryOrderDateTypeClient,
+                onValueSelect = onTimeSelect
+            )
+            Checkbox(checked = actualProviderOnTime, onCheckedChange = { checked ->
+                onConfirmOnTime(checked, MachineryOrderDateType.StartActualProvider)
+            })
+            TimePickerField(
+                value = actualProviderLDT,
+                label = stringResource(id = R.string.actual_provider),
+                stringValue = stringProviderLDT,
+                dateType = machineryOrderDateTypeProvider,
+                onValueSelect = onTimeSelect
+            )
+        }
     }
 }
 
@@ -215,7 +242,7 @@ fun RowWithDatePickerField(
 ) {
     Row(
         modifier = Modifier
-            .padding(start = 12.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
+            .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
@@ -280,6 +307,7 @@ fun DatePickerField(
 @Composable
 fun TimePickerField(
     value: LocalDateTime,
+    label: String = "",
     stringValue: String,
     dateType: MachineryOrderDateType,
     onValueSelect: (LocalDateTime, MachineryOrderDateType) -> Unit
@@ -291,9 +319,9 @@ fun TimePickerField(
             .width(76.dp)
             .clickable {
                 dateDialogState.show()
-            }
-            .background(color = Color(0xFFDCE1E8)),
+            },
         enabled = false,
+//        label = { Text(label) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
             unfocusedBorderColor = MaterialTheme.colorScheme.primaryContainer,

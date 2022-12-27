@@ -5,4 +5,7 @@
     <string name="pick_date">Укажите дату</string>
     <string name="ok">OK</string>
     <string name="cancel">Отмена</string>
+    <string name="plan">План</string>
+    <string name="actual_client">Ф Зак</string>
+    <string name="actual_provider">Ф Исп</string>
 </resources>
