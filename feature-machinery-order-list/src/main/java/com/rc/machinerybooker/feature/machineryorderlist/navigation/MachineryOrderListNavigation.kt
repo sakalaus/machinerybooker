@@ -19,10 +19,10 @@ fun NavGraphBuilder.machineryOrderListRoute(
     onNavigateToWelcomeScreen: () -> Unit,
     onScreenChanged: (String) -> Unit
 ) {
-    onScreenChanged(route ?: "")
     composable(route = machineryOrderListNavigationRoute) {
         OrderListRoute(
             welcomeScreenShown = welcomeScreenShown,
+            onScreenChanged = onScreenChanged,
             onNavigateToMachineryOrder = onNavigateToMachineryOrder,
             onNavigateToWelcomeScreen = onNavigateToWelcomeScreen
         )

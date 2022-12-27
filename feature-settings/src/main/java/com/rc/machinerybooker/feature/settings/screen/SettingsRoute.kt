@@ -12,20 +12,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rc.machinerybooker.domain.entities.MachineryOrder
+import com.rc.machinerybooker.feature.settings.navigation.settingsNavigationRoute
 
 @Composable
 fun SettingsRoute(
-    viewModel: SettingsViewModel  = hiltViewModel()
+    viewModel: SettingsViewModel  = hiltViewModel(),
+    onScreenChanged: (String) -> Unit
 ){
-    SettingsScreen()
+    SettingsScreen(
+        onScreenChanged = onScreenChanged
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(){
+fun SettingsScreen(
+    onScreenChanged: (String) -> Unit
+){
     var expanded by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.TopStart)) {
+    LaunchedEffect(key1 = true){
+        onScreenChanged(settingsNavigationRoute)
+    }
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .wrapContentSize(Alignment.TopStart)) {
         IconButton(onClick = { expanded = true }) {
             Icon(Icons.Default.MoreVert, contentDescription = "Localized description")
         }
@@ -44,7 +56,9 @@ fun SettingsScreen(){
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.TopStart)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .wrapContentSize(Alignment.TopStart)) {
         val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
         var expanded by remember { mutableStateOf(false) }
         var selectedOptionText by remember { mutableStateOf(options[0]) }

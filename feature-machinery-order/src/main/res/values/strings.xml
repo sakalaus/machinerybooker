@@ -8,4 +8,7 @@
     <string name="plan">План</string>
     <string name="actual_client">Ф Зак</string>
     <string name="actual_provider">Ф Исп</string>
+    <string name="start">Начало</string>
+    <string name="duration">Продолжительность</string>
+    <string name="finish">Окончание</string>
 </resources>

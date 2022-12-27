@@ -13,12 +13,12 @@ fun NavController.navigateToMachineryOrder(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.machineryOrderRoute(
     onScreenChanged: (String) -> Unit
 ) {
-    onScreenChanged(route ?: "")
     composable(
         route = "machinery_order_route/?machineryOrderId={machineryOrderId}",
         arguments = listOf(navArgument("machineryOrderId") { type = NavType.LongType })
     ) { backStackEntry ->
         MachineryOrderRoute(
+            onScreenChanged = onScreenChanged,
             machineryOrderId = backStackEntry.arguments?.getLong("machineryOrderId")
         )
     }

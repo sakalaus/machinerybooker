@@ -1,5 +1,6 @@
 package com.rc.feature.machinery_order.screen
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rc.feature.machinery_order.navigation.machineryOrderRoute
+import com.rc.machinerybooker.core.design.theme.MachineryBookerTheme
 import com.rc.machinerybooker.feature.machinery_order.R
 import com.rc.machinerybooker.domain.entities.representation
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -28,11 +31,13 @@ import java.util.*
 @Composable
 fun MachineryOrderRoute(
     viewModel: MachineryOrderViewModel = hiltViewModel(),
+    onScreenChanged: (String) -> Unit,
     machineryOrderId: Long? = null
 ) {
     val currentUiState = viewModel.uiState.collectAsState().value
     MachineryOrderScreen(
         currentUiState = currentUiState,
+        onScreenChanged = onScreenChanged,
         onValueSelect = { value ->
             viewModel.onEvent(
                 MachineryOrderEvent.ValueSelectFromDropDown(
@@ -57,10 +62,14 @@ fun MachineryOrderRoute(
 @Composable
 fun MachineryOrderScreen(
     currentUiState: MachineryOrderState,
+    onScreenChanged: (String) -> Unit,
     onValueSelect: (Any) -> Unit,
     onDateTimeSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
     onConfirmOnTime: (Boolean, MachineryOrderDateType) -> Unit
 ) {
+    LaunchedEffect(key1 = true){
+        onScreenChanged(machineryOrderRoute)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -138,6 +147,7 @@ fun MachineryOrderScreen(
         )
         Spacer(modifier = Modifier.height(2.dp))
         RowWithTimePickerFields(
+            sectionCaption = stringResource(id = R.string.start),
             plannedLDT = currentUiState.plannedStartLocalDateTime,
             stringPlannedLDT = currentUiState.plannedStartHoursMinutesString,
             actualClientOnTime = currentUiState.actualClientStartOnTime,
@@ -153,6 +163,23 @@ fun MachineryOrderScreen(
             onConfirmOnTime = onConfirmOnTime
         )
         RowWithTimePickerFields(
+            sectionCaption = stringResource(id = R.string.finish),
+            plannedLDT = currentUiState.plannedFinishLocalDateTime,
+            stringPlannedLDT = currentUiState.plannedFinishHoursMinutesString,
+            actualClientOnTime = currentUiState.actualClientFinishOnTime,
+            actualClientLDT = currentUiState.actualClientFinishLocalDateTime,
+            stringActualClientLDT = currentUiState.actualClientFinishHoursMinutesString,
+            actualProviderOnTime = currentUiState.actualProviderFinishOnTime,
+            actualProviderLDT = currentUiState.actualProviderFinishLocalDateTime,
+            stringProviderLDT = currentUiState.actualProviderFinishHoursMinutesString,
+            machineryOrderDateTypePlanned = MachineryOrderDateType.FinishPlanned,
+            machineryOrderDateTypeClient = MachineryOrderDateType.FinishActualClient,
+            machineryOrderDateTypeProvider = MachineryOrderDateType.FinishActualProvider,
+            onTimeSelect = onDateTimeSelect,
+            onConfirmOnTime = onConfirmOnTime
+        )
+        RowWithTimePickerFields(
+            sectionCaption = stringResource(id = R.string.duration),
             plannedLDT = currentUiState.plannedFinishLocalDateTime,
             stringPlannedLDT = currentUiState.plannedFinishHoursMinutesString,
             actualClientOnTime = currentUiState.actualClientFinishOnTime,
@@ -172,6 +199,7 @@ fun MachineryOrderScreen(
 
 @Composable
 fun RowWithTimePickerFields(
+    sectionCaption: String = "",
     plannedLDT: LocalDateTime,
     stringPlannedLDT: String,
     actualClientOnTime: Boolean,
@@ -192,9 +220,16 @@ fun RowWithTimePickerFields(
             .wrapContentHeight()
             .padding(start = 12.dp, end = 16.dp, top = 4.dp, bottom = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
         )
     ) {
+        Text(
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+            text = sectionCaption
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -242,7 +277,7 @@ fun RowWithDatePickerField(
 ) {
     Row(
         modifier = Modifier
-            .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+            .padding(start = 12.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
@@ -267,7 +302,7 @@ fun DatePickerField(
     val dateDialogState = rememberMaterialDialogState()
     OutlinedTextField(
         modifier = Modifier
-            .padding(horizontal = 4.dp, vertical = 4.dp)
+            .padding(horizontal = 4.dp)
             .wrapContentWidth()
             .clickable {
                 dateDialogState.show()
@@ -321,7 +356,7 @@ fun TimePickerField(
                 dateDialogState.show()
             },
         enabled = false,
-//        label = { Text(label) },
+        label = { Text(label) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
             unfocusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
@@ -551,25 +586,27 @@ fun SelectableField(
 }
 
 @Composable
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 fun RowWithTimePickerFieldsPreview() {
     val mockLocalDateTime = LocalDateTime.of(2022, 12, 10, 17, 25, 10)
     val mockLocalDateTimeString = mockLocalDateTime.format(DateTimeFormatter.ofPattern("hh:mm"))
-    RowWithTimePickerFields(
-        plannedLDT = mockLocalDateTime,
-        stringPlannedLDT = mockLocalDateTimeString,
-        onTimeSelect = { _, _ -> },
-        machineryOrderDateTypePlanned = MachineryOrderDateType.StartPlanned,
-        machineryOrderDateTypeClient = MachineryOrderDateType.FinishActualClient,
-        machineryOrderDateTypeProvider = MachineryOrderDateType.FinishActualProvider,
-        actualClientOnTime = false,
-        actualClientLDT = mockLocalDateTime,
-        stringActualClientLDT = mockLocalDateTimeString,
-        actualProviderOnTime = false,
-        actualProviderLDT = mockLocalDateTime,
-        stringProviderLDT = mockLocalDateTimeString,
-        onConfirmOnTime = { _, _ -> }
-    )
+    MachineryBookerTheme() {
+        RowWithTimePickerFields(
+            plannedLDT = mockLocalDateTime,
+            stringPlannedLDT = mockLocalDateTimeString,
+            onTimeSelect = { _, _ -> },
+            machineryOrderDateTypePlanned = MachineryOrderDateType.StartPlanned,
+            machineryOrderDateTypeClient = MachineryOrderDateType.FinishActualClient,
+            machineryOrderDateTypeProvider = MachineryOrderDateType.FinishActualProvider,
+            actualClientOnTime = false,
+            actualClientLDT = mockLocalDateTime,
+            stringActualClientLDT = mockLocalDateTimeString,
+            actualProviderOnTime = false,
+            actualProviderLDT = mockLocalDateTime,
+            stringProviderLDT = mockLocalDateTimeString,
+            onConfirmOnTime = { _, _ -> }
+        )
+    }
 }
 
 //@Composable

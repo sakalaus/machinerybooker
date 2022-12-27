@@ -23,9 +23,8 @@ class MbAppViewModel @Inject constructor(
     }
 
     private fun onScreenChanged(destination: String) {
-        when (destination) {
-
-            else -> Unit
+        _uiState.update {
+            it.copy(currentDestination = destination)
         }
     }
 

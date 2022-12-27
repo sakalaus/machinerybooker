@@ -32,11 +32,13 @@ import com.rc.machinerybooker.domain.mock.mockExtendedMachineryOrderData
 import com.rc.machinerybooker.domain.mock.mockMachineryOrders
 import com.rc.machinerybooker.domain.usecases.ExtendedMachineryOrderData
 import com.rc.machinerybooker.domain.usecases.extendedMachineryOrderMapType
+import com.rc.machinerybooker.feature.machineryorderlist.navigation.machineryOrderListNavigationRoute
 
 @Composable
 fun OrderListRoute(
     viewModel: MachineryOrderListViewModel = hiltViewModel(),
     welcomeScreenShown: Boolean,
+    onScreenChanged: (String) -> Unit,
     onNavigateToMachineryOrder: (Long) -> Unit,
     onNavigateToWelcomeScreen: () -> Unit
 ) {
@@ -44,6 +46,7 @@ fun OrderListRoute(
     OrderListScreen(
         uiState = currentUiState,
         welcomeScreenShown = welcomeScreenShown,
+        onScreenChanged = onScreenChanged,
         onNavigateToMachineryOrder = onNavigateToMachineryOrder,
         onNavigateToWelcomeScreen = onNavigateToWelcomeScreen
     )
@@ -53,10 +56,12 @@ fun OrderListRoute(
 fun OrderListScreen(
     uiState: MachineryOrderListState,
     welcomeScreenShown: Boolean,
+    onScreenChanged: (String) -> Unit,
     onNavigateToMachineryOrder: (Long) -> Unit,
     onNavigateToWelcomeScreen: () -> Unit
 ) {
     LaunchedEffect(key1 = true){
+        onScreenChanged(machineryOrderListNavigationRoute)
         if (welcomeScreenShown.not()){
             onNavigateToWelcomeScreen()
         }

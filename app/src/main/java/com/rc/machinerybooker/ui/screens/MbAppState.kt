@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.rc.feature.machinery_order.navigation.machineryOrderRoute
 import com.rc.machinerybooker.feature.machineryorderlist.navigation.machineryOrderListNavigationRoute
 import com.rc.machinerybooker.feature.machineryorderlist.navigation.navigateToMachineryOrderList
 import com.rc.machinerybooker.feature.settings.navigation.navigateToSettings
@@ -41,6 +42,7 @@ class MbAppState(
 
     val currentTopLevelDestination: MbTopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
+            machineryOrderRoute -> MACHINERY_ORDER_LIST
             machineryOrderListNavigationRoute -> MACHINERY_ORDER_LIST
             settingsNavigationRoute -> SETTINGS
             else -> null

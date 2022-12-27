@@ -1,4 +1,4 @@
-package com.rc.machinerybooker.ui.theme
+package com.rc.machinerybooker.core.design.theme
 
 import androidx.compose.ui.graphics.Color
 

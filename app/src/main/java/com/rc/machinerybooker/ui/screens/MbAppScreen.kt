@@ -62,7 +62,7 @@ fun MbAppScreen(
             }
         },
         floatingActionButton = {
-            if (currentAppDataState.shouldShowSystemBarsAndButtons) {
+            if (currentAppDataState.shouldShowSystemBarsAndButtons && currentAppDataState.shouldShowFab) {
                 ExtendedFloatingActionButton(
                     onClick = { },
                     modifier = Modifier,
@@ -82,7 +82,7 @@ fun MbAppScreen(
             welcomeScreenShown = currentAppDataState.welcomeScreenShown,
             onWelcomeScreenShow = { appViewModel.onEvent(WelcomeScreenShown) },
             onBackClick = appState::onBackClick,
-            onScreenChanged = { appViewModel.onEvent(ScreenChanged("")) },
+            onScreenChanged = { destination -> appViewModel.onEvent(ScreenChanged(destination)) },
             innerPadding = innerPadding
         )
     }

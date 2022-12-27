@@ -8,7 +8,6 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.rc.machinerybooker.ui.screens.MbAppScreen
-import com.rc.machinerybooker.ui.theme.MachineryBookerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,7 +16,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MachineryBookerTheme {
+            com.rc.machinerybooker.core.design.theme.MachineryBookerTheme {
                 MbAppScreen(
                     windowSizeClass = calculateWindowSizeClass(activity = this)
                 )
@@ -30,6 +29,6 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    MachineryBookerTheme {
+    com.rc.machinerybooker.core.design.theme.MachineryBookerTheme {
     }
 }
