@@ -3,7 +3,7 @@ package com.rc.feature.machinery_order.screen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rc.feature.machinery_order.screen.MachineryOrderDateType.StartPlanned
+import com.rc.feature.machinery_order.screen.MachineryOrderDateType.*
 import com.rc.machinerybooker.core.utils.toLong
 import com.rc.machinerybooker.domain.entities.MachineryOrderFilter
 import com.rc.machinerybooker.domain.entities.Project
@@ -94,28 +94,48 @@ class MachineryOrderViewModel @Inject constructor(
 
     private fun onConfirmOnTime(checked: Boolean, dateType: MachineryOrderDateType) {
         when (dateType) {
-            MachineryOrderDateType.StartActualClient -> _uiState.update {
+            StartActualClient -> _uiState.update {
                 it.copy(
                     actualClientStartOnTime = checked
                 )
             }
-            MachineryOrderDateType.StartActualProvider -> _uiState.update {
+            StartActualProvider -> _uiState.update {
                 it.copy(
-                   actualProviderStartOnTime = checked
+                    actualProviderStartOnTime = checked
+                )
+            }
+            FinishActualClient -> _uiState.update {
+                it.copy(
+                    actualClientFinishOnTime = checked
+                )
+            }
+            FinishActualProvider -> _uiState.update {
+                it.copy(
+                    actualProviderFinishOnTime = checked
                 )
             }
             else -> Unit
         }
-        if (checked){
+        if (checked) {
             when (dateType) {
-                MachineryOrderDateType.StartActualClient -> _uiState.update {
+                StartActualClient -> _uiState.update {
                     it.copy(
                         actualClientStartTimeStamp = it.plannedStartTimeStamp
                     )
                 }
-                MachineryOrderDateType.StartActualProvider -> _uiState.update {
+                StartActualProvider -> _uiState.update {
                     it.copy(
                         actualProviderStartTimeStamp = it.plannedStartTimeStamp
+                    )
+                }
+                FinishActualClient -> _uiState.update {
+                    it.copy(
+                        actualClientFinishTimeStamp = it.plannedFinishTimeStamp
+                    )
+                }
+                FinishActualProvider -> _uiState.update {
+                    it.copy(
+                        actualProviderFinishTimeStamp = it.plannedFinishTimeStamp
                     )
                 }
                 else -> Unit
@@ -130,16 +150,31 @@ class MachineryOrderViewModel @Inject constructor(
                     plannedStartTimeStamp = value.toLong()
                 )
             }
-            MachineryOrderDateType.StartActualClient -> _uiState.update {
+            StartActualClient -> _uiState.update {
                 it.copy(
                     actualClientStartTimeStamp = value.toLong()
                 )
             }
-            MachineryOrderDateType.StartActualProvider -> _uiState.update {
-            it.copy(
-                actualProviderStartTimeStamp = value.toLong()
-            )
-        }
+            StartActualProvider -> _uiState.update {
+                it.copy(
+                    actualProviderStartTimeStamp = value.toLong()
+                )
+            }
+            FinishPlanned -> _uiState.update {
+                it.copy(
+                    plannedFinishTimeStamp = value.toLong()
+                )
+            }
+            FinishActualClient -> _uiState.update {
+                it.copy(
+                    actualClientFinishTimeStamp = value.toLong()
+                )
+            }
+            FinishActualProvider -> _uiState.update {
+                it.copy(
+                    actualProviderFinishTimeStamp = value.toLong()
+                )
+            }
             else -> Unit
         }
     }

@@ -1,6 +1,7 @@
 package com.rc.feature.machinery_order.screen
 
 import com.rc.machinerybooker.core.utils.toLocalDateTime
+import com.rc.machinerybooker.core.utils.toLocalDateTimeUTC
 import com.rc.machinerybooker.domain.entities.Department
 import com.rc.machinerybooker.domain.entities.OrderStatus
 import com.rc.machinerybooker.domain.entities.Project
@@ -78,4 +79,26 @@ data class MachineryOrderState(
         get() = actualProviderFinishTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd-MMMM-yyyy"))
     val actualProviderFinishHoursMinutesString: String
         get() = actualProviderFinishTimeStamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("hh:mm"))
+
+    val plannedDuration: Long
+        get() = plannedFinishTimeStamp - plannedStartTimeStamp
+    val plannedDurationLocalDateTime: LocalDateTime
+        get() = (plannedFinishTimeStamp - plannedStartTimeStamp).toLocalDateTimeUTC()
+    val plannedDurationHoursMinutesString: String
+        get() = (plannedFinishTimeStamp - plannedStartTimeStamp).toLocalDateTimeUTC().format(DateTimeFormatter.ofPattern("hh:mm"))
+
+    val actualClientDuration: Long
+        get() = actualClientFinishTimeStamp - actualClientStartTimeStamp
+    val actualClientDurationLocalDateTime: LocalDateTime
+        get() = (actualClientFinishTimeStamp - actualClientStartTimeStamp).toLocalDateTimeUTC()
+    val actualClientDurationHoursMinutesString: String
+        get() = (actualClientFinishTimeStamp - actualClientStartTimeStamp).toLocalDateTimeUTC().format(DateTimeFormatter.ofPattern("hh:mm"))
+
+    val actualProviderDuration: Long
+        get() = actualProviderFinishTimeStamp - actualProviderStartTimeStamp
+    val actualProviderDurationLocalDateTime: LocalDateTime
+        get() = (actualProviderFinishTimeStamp - actualProviderStartTimeStamp).toLocalDateTimeUTC()
+    val actualProviderDurationHoursMinutesString: String
+        get() = (actualProviderFinishTimeStamp - actualProviderStartTimeStamp).toLocalDateTimeUTC().format(DateTimeFormatter.ofPattern("hh:mm"))
+    
 }

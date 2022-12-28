@@ -10,3 +10,5 @@ fun LocalDate.toLong() = this.atStartOfDay(ZoneId.systemDefault()).toEpochSecond
 fun LocalDateTime.toLong() = this.atZone(ZoneId.systemDefault()).toEpochSecond()*1000;
 fun Long.toLocalDateTime(): LocalDateTime = LocalDateTime.ofInstant(
     Instant.ofEpochSecond(this/1000), TimeZone.getDefault().toZoneId());
+fun Long.toLocalDateTimeUTC(): LocalDateTime = LocalDateTime.ofInstant(
+    Instant.ofEpochSecond(this/1000), TimeZone.getTimeZone("UTC").toZoneId());

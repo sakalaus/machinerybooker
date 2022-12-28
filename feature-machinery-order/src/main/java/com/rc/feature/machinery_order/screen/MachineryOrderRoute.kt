@@ -1,9 +1,7 @@
 package com.rc.feature.machinery_order.screen
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -11,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -67,12 +66,13 @@ fun MachineryOrderScreen(
     onDateTimeSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
     onConfirmOnTime: (Boolean, MachineryOrderDateType) -> Unit
 ) {
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = true) {
         onScreenChanged(machineryOrderRoute)
     }
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         Row(
             modifier = Modifier
@@ -141,65 +141,97 @@ fun MachineryOrderScreen(
         Spacer(modifier = Modifier.height(2.dp))
         RowWithDatePickerField(
             value = currentUiState.plannedStartLocalDateTime,
+            enabled = true,
             stringValue = currentUiState.plannedStartDateString,
             dateType = MachineryOrderDateType.StartPlanned,
             onValueSelect = onDateTimeSelect
         )
-        Spacer(modifier = Modifier.height(2.dp))
-        RowWithTimePickerFields(
-            sectionCaption = stringResource(id = R.string.start),
-            plannedLDT = currentUiState.plannedStartLocalDateTime,
-            stringPlannedLDT = currentUiState.plannedStartHoursMinutesString,
-            actualClientOnTime = currentUiState.actualClientStartOnTime,
-            actualClientLDT = currentUiState.actualClientStartLocalDateTime,
-            stringActualClientLDT = currentUiState.actualClientStartHoursMinutesString,
-            actualProviderOnTime = currentUiState.actualProviderStartOnTime,
-            actualProviderLDT = currentUiState.actualProviderStartLocalDateTime,
-            stringProviderLDT = currentUiState.actualProviderStartHoursMinutesString,
-            machineryOrderDateTypePlanned = MachineryOrderDateType.StartPlanned,
-            machineryOrderDateTypeClient = MachineryOrderDateType.StartActualClient,
-            machineryOrderDateTypeProvider = MachineryOrderDateType.StartActualProvider,
-            onTimeSelect = onDateTimeSelect,
-            onConfirmOnTime = onConfirmOnTime
-        )
-        RowWithTimePickerFields(
-            sectionCaption = stringResource(id = R.string.finish),
-            plannedLDT = currentUiState.plannedFinishLocalDateTime,
-            stringPlannedLDT = currentUiState.plannedFinishHoursMinutesString,
-            actualClientOnTime = currentUiState.actualClientFinishOnTime,
-            actualClientLDT = currentUiState.actualClientFinishLocalDateTime,
-            stringActualClientLDT = currentUiState.actualClientFinishHoursMinutesString,
-            actualProviderOnTime = currentUiState.actualProviderFinishOnTime,
-            actualProviderLDT = currentUiState.actualProviderFinishLocalDateTime,
-            stringProviderLDT = currentUiState.actualProviderFinishHoursMinutesString,
-            machineryOrderDateTypePlanned = MachineryOrderDateType.FinishPlanned,
-            machineryOrderDateTypeClient = MachineryOrderDateType.FinishActualClient,
-            machineryOrderDateTypeProvider = MachineryOrderDateType.FinishActualProvider,
-            onTimeSelect = onDateTimeSelect,
-            onConfirmOnTime = onConfirmOnTime
-        )
-        RowWithTimePickerFields(
-            sectionCaption = stringResource(id = R.string.duration),
-            plannedLDT = currentUiState.plannedFinishLocalDateTime,
-            stringPlannedLDT = currentUiState.plannedFinishHoursMinutesString,
-            actualClientOnTime = currentUiState.actualClientFinishOnTime,
-            actualClientLDT = currentUiState.actualClientFinishLocalDateTime,
-            stringActualClientLDT = currentUiState.actualClientFinishHoursMinutesString,
-            actualProviderOnTime = currentUiState.actualProviderFinishOnTime,
-            actualProviderLDT = currentUiState.actualProviderFinishLocalDateTime,
-            stringProviderLDT = currentUiState.actualProviderFinishHoursMinutesString,
-            machineryOrderDateTypePlanned = MachineryOrderDateType.FinishPlanned,
-            machineryOrderDateTypeClient = MachineryOrderDateType.FinishActualClient,
-            machineryOrderDateTypeProvider = MachineryOrderDateType.FinishActualProvider,
-            onTimeSelect = onDateTimeSelect,
-            onConfirmOnTime = onConfirmOnTime
-        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(horizontal = 12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 2.dp
+            )
+        ) {
+            RowWithTimePickerFields(
+                sectionCaption = stringResource(id = R.string.start),
+                enabled = true,
+                plannedLDT = currentUiState.plannedStartLocalDateTime,
+                stringPlannedLDT = currentUiState.plannedStartHoursMinutesString,
+                actualClientOnTime = currentUiState.actualClientStartOnTime,
+                actualClientLDT = currentUiState.actualClientStartLocalDateTime,
+                stringActualClientLDT = currentUiState.actualClientStartHoursMinutesString,
+                actualProviderOnTime = currentUiState.actualProviderStartOnTime,
+                actualProviderLDT = currentUiState.actualProviderStartLocalDateTime,
+                stringProviderLDT = currentUiState.actualProviderStartHoursMinutesString,
+                machineryOrderDateTypePlanned = MachineryOrderDateType.StartPlanned,
+                machineryOrderDateTypeClient = MachineryOrderDateType.StartActualClient,
+                machineryOrderDateTypeProvider = MachineryOrderDateType.StartActualProvider,
+                onTimeSelect = onDateTimeSelect,
+                onConfirmOnTime = onConfirmOnTime
+            )
+            RowWithTimePickerFields(
+                sectionCaption = stringResource(id = R.string.finish),
+                enabled = true,
+                plannedLDT = currentUiState.plannedFinishLocalDateTime,
+                stringPlannedLDT = currentUiState.plannedFinishHoursMinutesString,
+                actualClientOnTime = currentUiState.actualClientFinishOnTime,
+                actualClientLDT = currentUiState.actualClientFinishLocalDateTime,
+                stringActualClientLDT = currentUiState.actualClientFinishHoursMinutesString,
+                actualProviderOnTime = currentUiState.actualProviderFinishOnTime,
+                actualProviderLDT = currentUiState.actualProviderFinishLocalDateTime,
+                stringProviderLDT = currentUiState.actualProviderFinishHoursMinutesString,
+                machineryOrderDateTypePlanned = MachineryOrderDateType.FinishPlanned,
+                machineryOrderDateTypeClient = MachineryOrderDateType.FinishActualClient,
+                machineryOrderDateTypeProvider = MachineryOrderDateType.FinishActualProvider,
+                onTimeSelect = onDateTimeSelect,
+                onConfirmOnTime = onConfirmOnTime
+            )
+            RowWithTimePickerFields(
+                sectionCaption = stringResource(id = R.string.duration),
+                enabled = false,
+                plannedLDT = currentUiState.plannedDurationLocalDateTime,
+                stringPlannedLDT = currentUiState.plannedDurationHoursMinutesString,
+                actualClientOnTime = currentUiState.actualClientFinishOnTime,
+                actualClientLDT = currentUiState.actualClientDurationLocalDateTime,
+                stringActualClientLDT = currentUiState.actualClientDurationHoursMinutesString,
+                actualProviderOnTime = currentUiState.actualProviderFinishOnTime,
+                actualProviderLDT = currentUiState.actualProviderDurationLocalDateTime,
+                stringProviderLDT = currentUiState.actualProviderDurationHoursMinutesString,
+                machineryOrderDateTypePlanned = MachineryOrderDateType.FinishPlanned,
+                machineryOrderDateTypeClient = MachineryOrderDateType.FinishActualClient,
+                machineryOrderDateTypeProvider = MachineryOrderDateType.FinishActualProvider,
+                onTimeSelect = { _, _ -> },
+                onConfirmOnTime = { _, _ -> }
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = Color.White
+                ),
+                onClick = { /* Do something! */ })
+            { Text("Сохранить") }
+        }
     }
 }
 
 @Composable
 fun RowWithTimePickerFields(
     sectionCaption: String = "",
+    enabled: Boolean = true,
     plannedLDT: LocalDateTime,
     stringPlannedLDT: String,
     actualClientOnTime: Boolean,
@@ -214,17 +246,11 @@ fun RowWithTimePickerFields(
     onTimeSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
     onConfirmOnTime: (Boolean, MachineryOrderDateType) -> Unit
 ) {
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(start = 12.dp, end = 16.dp, top = 4.dp, bottom = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        )
+            .padding(start = 12.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
@@ -238,26 +264,37 @@ fun RowWithTimePickerFields(
         ) {
             TimePickerField(
                 value = plannedLDT,
+                enabled = enabled,
                 label = stringResource(id = R.string.plan),
                 stringValue = stringPlannedLDT,
                 dateType = machineryOrderDateTypePlanned,
                 onValueSelect = onTimeSelect
             )
-            Checkbox(checked = actualClientOnTime, onCheckedChange = { checked ->
-                onConfirmOnTime(checked, MachineryOrderDateType.StartActualClient)
-            })
+            Checkbox(
+                modifier = Modifier.alpha(if (enabled) 1f else 0f),
+                checked = actualClientOnTime,
+                enabled = enabled,
+                onCheckedChange = { checked ->
+                    onConfirmOnTime(checked, machineryOrderDateTypeClient)
+                })
             TimePickerField(
                 value = actualClientLDT,
+                enabled = enabled,
                 label = stringResource(id = R.string.actual_client),
                 stringValue = stringActualClientLDT,
                 dateType = machineryOrderDateTypeClient,
                 onValueSelect = onTimeSelect
             )
-            Checkbox(checked = actualProviderOnTime, onCheckedChange = { checked ->
-                onConfirmOnTime(checked, MachineryOrderDateType.StartActualProvider)
-            })
+            Checkbox(
+                modifier = Modifier.alpha(if (enabled) 1f else 0f),
+                checked = actualProviderOnTime,
+                enabled = enabled,
+                onCheckedChange = { checked ->
+                    onConfirmOnTime(checked, machineryOrderDateTypeProvider)
+                })
             TimePickerField(
                 value = actualProviderLDT,
+                enabled = enabled,
                 label = stringResource(id = R.string.actual_provider),
                 stringValue = stringProviderLDT,
                 dateType = machineryOrderDateTypeProvider,
@@ -271,6 +308,7 @@ fun RowWithTimePickerFields(
 @Composable
 fun RowWithDatePickerField(
     value: LocalDateTime,
+    enabled: Boolean = true,
     stringValue: String,
     dateType: MachineryOrderDateType,
     onValueSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
@@ -284,6 +322,7 @@ fun RowWithDatePickerField(
     ) {
         DatePickerField(
             value = value,
+            enabled = enabled,
             stringValue = stringValue,
             dateType = dateType,
             onValueSelect = onValueSelect
@@ -295,6 +334,7 @@ fun RowWithDatePickerField(
 @Composable
 fun DatePickerField(
     value: LocalDateTime,
+    enabled: Boolean = true,
     stringValue: String,
     dateType: MachineryOrderDateType,
     onValueSelect: (LocalDateTime, MachineryOrderDateType) -> Unit
@@ -307,7 +347,7 @@ fun DatePickerField(
             .clickable {
                 dateDialogState.show()
             }
-            .background(color = Color(0xFFDCE1E8)),
+            .background(color = MaterialTheme.colorScheme.surfaceTint),
         enabled = false,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
@@ -321,19 +361,21 @@ fun DatePickerField(
         readOnly = true,
         maxLines = 1
     )
-    MaterialDialog(
-        dialogState = dateDialogState,
-        buttons = {
-            positiveButton(text = "Ok") {
+    if (enabled) {
+        MaterialDialog(
+            dialogState = dateDialogState,
+            buttons = {
+                positiveButton(text = "Ok") {
+                }
+                negativeButton(text = "Cancel")
             }
-            negativeButton(text = "Cancel")
-        }
-    ) {
-        datepicker(
-            initialDate = value.toLocalDate(),
-            title = stringResource(id = R.string.pick_date)
-        ) { selectedDate ->
-            onValueSelect(LocalDateTime.of(selectedDate, value.toLocalTime()), dateType)
+        ) {
+            datepicker(
+                initialDate = value.toLocalDate(),
+                title = stringResource(id = R.string.pick_date)
+            ) { selectedDate ->
+                onValueSelect(LocalDateTime.of(selectedDate, value.toLocalTime()), dateType)
+            }
         }
     }
 }
@@ -342,6 +384,7 @@ fun DatePickerField(
 @Composable
 fun TimePickerField(
     value: LocalDateTime,
+    enabled: Boolean = true,
     label: String = "",
     stringValue: String,
     dateType: MachineryOrderDateType,
@@ -358,6 +401,9 @@ fun TimePickerField(
         enabled = false,
         label = { Text(label) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
+            containerColor = if (enabled) {
+                MaterialTheme.colorScheme.surfaceTint
+            } else Color.Transparent,
             focusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
             unfocusedBorderColor = MaterialTheme.colorScheme.primaryContainer,
             disabledBorderColor = MaterialTheme.colorScheme.primaryContainer,
@@ -369,19 +415,21 @@ fun TimePickerField(
         readOnly = true,
         maxLines = 1
     )
-    MaterialDialog(
-        dialogState = dateDialogState,
-        buttons = {
-            positiveButton(text = "Ok") {
+    if (enabled) {
+        MaterialDialog(
+            dialogState = dateDialogState,
+            buttons = {
+                positiveButton(text = "Ok") {
+                }
+                negativeButton(text = "Cancel")
             }
-            negativeButton(text = "Cancel")
-        }
-    ) {
-        timepicker(
-            initialTime = value.toLocalTime(),
-            title = stringResource(id = R.string.pick_time),
-        ) { selectedTime ->
-            onValueSelect(LocalDateTime.of(value.toLocalDate(), selectedTime), dateType)
+        ) {
+            timepicker(
+                initialTime = value.toLocalTime(),
+                title = stringResource(id = R.string.pick_time),
+            ) { selectedTime ->
+                onValueSelect(LocalDateTime.of(value.toLocalDate(), selectedTime), dateType)
+            }
         }
     }
 }
@@ -537,7 +585,7 @@ fun SelectableField(
                 .padding(horizontal = 8.dp)
                 .menuAnchor()
                 .fillMaxWidth()
-                .background(color = Color(0xFFDCE1E8)),
+                .background(color = MaterialTheme.colorScheme.surfaceTint),
             value = value.representation(),
             readOnly = hasDropDownMenu, // TODO allow text edit even for dropdowns
             placeholder = { stringResource(id = R.string.select_vehicle) },
