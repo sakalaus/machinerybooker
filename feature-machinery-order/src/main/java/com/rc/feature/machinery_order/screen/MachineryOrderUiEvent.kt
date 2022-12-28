@@ -7,5 +7,6 @@ sealed interface MachineryOrderEvent {
     class ValueSelectFromDropDown(val value: Any): MachineryOrderEvent
     class DateSelect(val value: LocalDateTime, val dateType: MachineryOrderDateType): MachineryOrderEvent
     class ConfirmOnTime(val checked: Boolean, val dateType: MachineryOrderDateType): MachineryOrderEvent
+    object Save: MachineryOrderEvent
     class ProjectCodeChange(code: String): MachineryOrderEvent
 }

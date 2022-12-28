@@ -22,6 +22,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rc.machinerybooker.navigation.MbNavHost
 import com.rc.machinerybooker.navigation.MbTopLevelDestination
 import com.rc.machinerybooker.R
+import com.rc.machinerybooker.navigation.onNavigateToMachineryOrder
 import com.rc.machinerybooker.ui.screens.MbAppScreenEvent.*
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -64,9 +65,9 @@ fun MbAppScreen(
         floatingActionButton = {
             if (currentAppDataState.shouldShowSystemBarsAndButtons && currentAppDataState.shouldShowFab) {
                 ExtendedFloatingActionButton(
-                    onClick = { },
                     modifier = Modifier,
-                    containerColor = FloatingActionButtonDefaults.containerColor.copy(alpha = 0.8f)
+                    containerColor = FloatingActionButtonDefaults.containerColor.copy(alpha = 0.8f),
+                    onClick = { appState.navController.onNavigateToMachineryOrder(-1) },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -103,7 +104,7 @@ fun MbTopBar(
         title = {
             Text(
                 style = MaterialTheme.typography.titleMedium,
-                text = "Преголь: Заявки"
+                text = stringResource(id = R.string.machinery_orders)
             )
         },
         navigationIcon = {},
@@ -157,7 +158,7 @@ fun MbBottomBar(
 ) {
 
     NavigationBar(
-        tonalElevation = 0.dp,
+        tonalElevation = 20.dp,
     ) {
         destinations.forEach { destination ->
             val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)

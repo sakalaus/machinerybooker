@@ -34,7 +34,8 @@ fun MbNavHost(
             onNavigateToMachineryOrderList = { navController.onNavigateToMachineryOrderList() }
         )
         machineryOrderRoute(
-            onScreenChanged = onScreenChanged
+            onScreenChanged = onScreenChanged,
+            onNavigateToMachineryOrderList = { navController.onNavigateToMachineryOrderList() }
         )
         machineryOrderListRoute(
             onScreenChanged = onScreenChanged,

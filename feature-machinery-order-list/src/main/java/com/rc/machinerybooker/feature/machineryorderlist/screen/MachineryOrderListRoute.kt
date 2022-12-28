@@ -66,15 +66,17 @@ fun OrderListScreen(
             onNavigateToWelcomeScreen()
         }
     }
-    if (uiState.noMachineryOrdersFound) {
-        EmptyOrderListScreen()
-    } else {
-        OrderListScreen(
-            machineryOrdersMap = uiState.machineryOrdersMap,
-            isLoading = uiState.isLoading,
-            isFaulty = uiState.isFaulty,
-            onNavigateToMachineryOrder = onNavigateToMachineryOrder
-        )
+    if (welcomeScreenShown){
+        if (uiState.noMachineryOrdersFound) {
+            EmptyOrderListScreen()
+        } else {
+            OrderListScreen(
+                machineryOrdersMap = uiState.machineryOrdersMap,
+                isLoading = uiState.isLoading,
+                isFaulty = uiState.isFaulty,
+                onNavigateToMachineryOrder = onNavigateToMachineryOrder
+            )
+        }
     }
 }
 

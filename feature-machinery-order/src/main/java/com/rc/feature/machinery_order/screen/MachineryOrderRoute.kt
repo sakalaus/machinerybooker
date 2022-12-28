@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rc.feature.machinery_order.navigation.machineryOrderRoute
+import com.rc.feature.machinery_order.screen.MachineryOrderEvent.*
 import com.rc.machinerybooker.core.design.theme.MachineryBookerTheme
 import com.rc.machinerybooker.feature.machinery_order.R
 import com.rc.machinerybooker.domain.entities.representation
@@ -30,8 +31,9 @@ import java.util.*
 @Composable
 fun MachineryOrderRoute(
     viewModel: MachineryOrderViewModel = hiltViewModel(),
+    machineryOrderId: Long? = null,
     onScreenChanged: (String) -> Unit,
-    machineryOrderId: Long? = null
+    onNavigateToMachineryOrderList: () -> Unit,
 ) {
     val currentUiState = viewModel.uiState.collectAsState().value
     MachineryOrderScreen(
@@ -39,20 +41,24 @@ fun MachineryOrderRoute(
         onScreenChanged = onScreenChanged,
         onValueSelect = { value ->
             viewModel.onEvent(
-                MachineryOrderEvent.ValueSelectFromDropDown(
+                ValueSelectFromDropDown(
                     value
                 )
             )
         },
         onDateTimeSelect = { date, dateType ->
             viewModel.onEvent(
-                MachineryOrderEvent.DateSelect(date, dateType),
+                DateSelect(date, dateType),
             )
         },
         onConfirmOnTime = { checked, dateType ->
             viewModel.onEvent(
-                MachineryOrderEvent.ConfirmOnTime(checked, dateType),
+                ConfirmOnTime(checked, dateType),
             )
+        },
+        onSave = {
+            viewModel.onEvent(Save)
+            onNavigateToMachineryOrderList()
         }
     )
 }
@@ -64,7 +70,8 @@ fun MachineryOrderScreen(
     onScreenChanged: (String) -> Unit,
     onValueSelect: (Any) -> Unit,
     onDateTimeSelect: (LocalDateTime, MachineryOrderDateType) -> Unit,
-    onConfirmOnTime: (Boolean, MachineryOrderDateType) -> Unit
+    onConfirmOnTime: (Boolean, MachineryOrderDateType) -> Unit,
+    onSave: () -> Unit
 ) {
     LaunchedEffect(key1 = true) {
         onScreenChanged(machineryOrderRoute)
@@ -120,6 +127,7 @@ fun MachineryOrderScreen(
         RowWithEditableField(
             options = currentUiState.vehicleOptions,
             value = currentUiState.vehicle,
+            placeholder = stringResource(id = R.string.select_vehicle),
             onValueChange = {},
             onValueSelect = onValueSelect
         )
@@ -127,6 +135,7 @@ fun MachineryOrderScreen(
         RowWithEditableField(
             options = currentUiState.projectOptions,
             value = currentUiState.project,
+            placeholder = stringResource(id = R.string.select_project),
             onValueChange = {},
             onValueSelect = onValueSelect
         )
@@ -134,6 +143,7 @@ fun MachineryOrderScreen(
         RowWithEditableField(
             options = currentUiState.vehicleOptions,
             value = currentUiState.locationDescription,
+            placeholder = stringResource(id = R.string.select_location),
             onValueChange = {},
             onValueSelect = {},
             hasDropDownMenu = false
@@ -222,8 +232,9 @@ fun MachineryOrderScreen(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = Color.White
                 ),
-                onClick = { /* Do something! */ })
-            { Text("Сохранить") }
+                onClick = onSave
+            )
+            { Text(text = stringResource(id = R.string.save)) }
         }
     }
 }
@@ -274,6 +285,9 @@ fun RowWithTimePickerFields(
                 modifier = Modifier.alpha(if (enabled) 1f else 0f),
                 checked = actualClientOnTime,
                 enabled = enabled,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = MaterialTheme.colorScheme.primaryContainer
+                ),
                 onCheckedChange = { checked ->
                     onConfirmOnTime(checked, machineryOrderDateTypeClient)
                 })
@@ -289,6 +303,9 @@ fun RowWithTimePickerFields(
                 modifier = Modifier.alpha(if (enabled) 1f else 0f),
                 checked = actualProviderOnTime,
                 enabled = enabled,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = MaterialTheme.colorScheme.primaryContainer
+                ),
                 onCheckedChange = { checked ->
                     onConfirmOnTime(checked, machineryOrderDateTypeProvider)
                 })
@@ -365,9 +382,8 @@ fun DatePickerField(
         MaterialDialog(
             dialogState = dateDialogState,
             buttons = {
-                positiveButton(text = "Ok") {
-                }
-                negativeButton(text = "Cancel")
+                positiveButton(text = stringResource(id = R.string.ok))
+                negativeButton(text = stringResource(id = R.string.cancel))
             }
         ) {
             datepicker(
@@ -419,9 +435,8 @@ fun TimePickerField(
         MaterialDialog(
             dialogState = dateDialogState,
             buttons = {
-                positiveButton(text = "Ok") {
-                }
-                negativeButton(text = "Cancel")
+                positiveButton(text = stringResource(id = R.string.ok))
+                negativeButton(text = stringResource(id = R.string.cancel))
             }
         ) {
             timepicker(
@@ -485,9 +500,8 @@ fun DateTimePickerField() {
     MaterialDialog(
         dialogState = dateDialogState,
         buttons = {
-            positiveButton(text = "Ok") {
-            }
-            negativeButton(text = "Cancel")
+            positiveButton(text = stringResource(id = R.string.ok))
+            negativeButton(text = stringResource(id = R.string.cancel))
         }
     ) {
         datepicker(
@@ -524,6 +538,9 @@ fun RowScope.OutlinedCardSelectable(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer
+        ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primaryContainer)
     ) {
         Text(
@@ -540,6 +557,7 @@ fun RowScope.OutlinedCardSelectable(
 fun ColumnScope.RowWithEditableField(
     options: List<Any> = emptyList<Any>(),
     value: Any? = null,
+    placeholder: String = "",
     onValueChange: () -> Unit,
     onValueSelect: (Any) -> Unit,
     hasDropDownMenu: Boolean = true
@@ -554,6 +572,7 @@ fun ColumnScope.RowWithEditableField(
         SelectableField(
             options = options,
             value = value,
+            placeholder = placeholder,
             onValueChange = onValueChange,
             onValueSelect = onValueSelect,
             hasDropDownMenu = hasDropDownMenu
@@ -566,6 +585,7 @@ fun ColumnScope.RowWithEditableField(
 fun SelectableField(
     options: List<Any> = emptyList(),
     value: Any? = null,
+    placeholder: String = "",
     onValueChange: () -> Unit,
     onValueSelect: (Any) -> Unit,
     hasDropDownMenu: Boolean
@@ -586,9 +606,8 @@ fun SelectableField(
                 .menuAnchor()
                 .fillMaxWidth()
                 .background(color = MaterialTheme.colorScheme.surfaceTint),
-            value = value.representation(),
+            value = value.representation().ifEmpty { placeholder },
             readOnly = hasDropDownMenu, // TODO allow text edit even for dropdowns
-            placeholder = { stringResource(id = R.string.select_vehicle) },
             maxLines = 1,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colorScheme.primaryContainer,

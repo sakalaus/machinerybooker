@@ -8,11 +8,13 @@ import com.rc.machinerybooker.core.utils.toLong
 import com.rc.machinerybooker.domain.entities.MachineryOrderFilter
 import com.rc.machinerybooker.domain.entities.Project
 import com.rc.machinerybooker.domain.entities.Vehicle
+import com.rc.machinerybooker.domain.mock.mockDepartments
 import com.rc.machinerybooker.domain.usecases.UseCases
 import com.rc.machinerybooker.domain.usecases.extendedMachineryOrderMapType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import java.time.LocalDateTime
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,34 +34,50 @@ class MachineryOrderViewModel @Inject constructor(
     private fun initializeObservers() {
 
         savedStateHandle.get<Long>("machineryOrderId")?.let { machineryOrderId ->
-            useCases.observeMachineryOrderExtendedDataList(
-                machineryOrderFilter = MachineryOrderFilter(id = machineryOrderId)
-            ).onEach { machineryOrderMap: extendedMachineryOrderMapType ->
-                machineryOrderMap.entries.first().let { machineryOrderData ->
-                    val machineryOrder = machineryOrderData.key
-                    val extendedData = machineryOrderData.value
-                    _uiState.update {
-                        it.copy(
-                            id = machineryOrder.id,
-                            externalId = machineryOrder.externalId,
-                            description = machineryOrder.description,
-                            locationDescription = machineryOrder.location,
-                            clientDepartment = extendedData.clientDepartment,
-                            providerDepartment = extendedData.providerDepartment,
-                            project = extendedData.project,
-                            vehicle = extendedData.vehicle,
-                            plannedStartTimeStamp = machineryOrder.plannedStartTimeStamp,
-                            actualClientStartTimeStamp = machineryOrder.actualClientStartTimeStamp,
-                            actualProviderStartTimeStamp = machineryOrder.actualProviderStartTimeStamp,
-                            plannedFinishTimeStamp = machineryOrder.plannedFinishTimeStamp,
-                            actualClientFinishTimeStamp = machineryOrder.actualClientFinishTimeStamp,
-                            actualProviderFinishTimeStamp = machineryOrder.actualProviderFinishTimeStamp,
-                            createdTimeStamp = machineryOrder.createdTimeStamp
-                        )
+            if (machineryOrderId != -1L) {
+                useCases.observeMachineryOrderExtendedDataList(
+                    machineryOrderFilter = MachineryOrderFilter(id = machineryOrderId)
+                ).onEach { machineryOrderMap: extendedMachineryOrderMapType ->
+                    machineryOrderMap.entries.first().let { machineryOrderData ->
+                        val machineryOrder = machineryOrderData.key
+                        val extendedData = machineryOrderData.value
+                        _uiState.update {
+                            it.copy(
+                                id = machineryOrder.id,
+                                externalId = machineryOrder.externalId,
+                                description = machineryOrder.description,
+                                locationDescription = machineryOrder.location,
+                                clientDepartment = extendedData.clientDepartment,
+                                providerDepartment = extendedData.providerDepartment,
+                                project = extendedData.project,
+                                vehicle = extendedData.vehicle,
+                                plannedStartTimeStamp = machineryOrder.plannedStartTimeStamp,
+                                actualClientStartTimeStamp = machineryOrder.actualClientStartTimeStamp,
+                                actualProviderStartTimeStamp = machineryOrder.actualProviderStartTimeStamp,
+                                plannedFinishTimeStamp = machineryOrder.plannedFinishTimeStamp,
+                                actualClientFinishTimeStamp = machineryOrder.actualClientFinishTimeStamp,
+                                actualProviderFinishTimeStamp = machineryOrder.actualProviderFinishTimeStamp,
+                                createdTimeStamp = machineryOrder.createdTimeStamp
+                            )
+                        }
                     }
+                }.launchIn(viewModelScope)
+            }
+            else {
+                val now = Calendar.getInstance().timeInMillis
+                _uiState.update {
+                    it.copy(
+                        clientDepartment = mockDepartments[0],
+                        providerDepartment = mockDepartments[1],
+                        plannedStartTimeStamp = now,
+                        actualClientStartTimeStamp = now,
+                        actualProviderStartTimeStamp = now,
+                        plannedFinishTimeStamp = now + 3600000,
+                        actualClientFinishTimeStamp = now + 3600000,
+                        actualProviderFinishTimeStamp = now + 3600000
+                    )
                 }
             }
-                .launchIn(viewModelScope)
         }
 
         useCases.observeVehicles()
